@@ -108,7 +108,7 @@ public class User {
 
     // Cuidado que hay que poner los orphan para que no se queden colgados los 1 a 1 al quitar los login
     // https://stackoverflow.com/questions/2302802/how-to-fix-the-hibernate-object-references-an-unsaved-transient-instance-save # 96
-    @OneToOne(mappedBy = "user", orphanRemoval = true, cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     public Login getLogin() {
         return login;
     }
@@ -125,7 +125,7 @@ public class User {
         cambia el comportamiento default con @OneToMany(fetch=FetchType.EAGER).
         Esto hace que friends se instancie junto con el resto de los atributos.
      */
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "user" ) // Estudiar la cascada
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "user", orphanRemoval = true, cascade = CascadeType.ALL) // Estudiar la cascada
     public Set<Post> getPosts() {
         return posts;
     }
@@ -137,7 +137,7 @@ public class User {
 
     // La Cascada
     // http://openjpa.apache.org/builds/2.4.0/apache-openjpa/docs/jpa_overview_meta_field.html#jpa_overview_meta_cascade
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "user", cascade = CascadeType.REMOVE) // cascade = CascadeType.ALL
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "user", orphanRemoval = true, cascade = CascadeType.REMOVE) // cascade = CascadeType.ALL
     public Set<Comment> getComments() {
         return comments;
     }

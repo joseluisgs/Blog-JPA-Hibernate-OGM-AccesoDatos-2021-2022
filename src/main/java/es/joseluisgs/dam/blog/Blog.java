@@ -5,10 +5,7 @@ import es.joseluisgs.dam.blog.dao.Category;
 import es.joseluisgs.dam.blog.dao.Comment;
 import es.joseluisgs.dam.blog.dao.Post;
 import es.joseluisgs.dam.blog.dao.User;
-import es.joseluisgs.dam.blog.dto.CategoryDTO;
-import es.joseluisgs.dam.blog.dto.CommentDTO;
-import es.joseluisgs.dam.blog.dto.PostDTO;
-import es.joseluisgs.dam.blog.dto.UserDTO;
+import es.joseluisgs.dam.blog.dto.*;
 import es.joseluisgs.dam.blog.manager.HibernateController;
 import es.joseluisgs.dam.blog.mapper.CategoryMapper;
 import es.joseluisgs.dam.blog.mapper.PostMapper;
@@ -22,6 +19,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 public class Blog {
@@ -44,9 +42,9 @@ public class Blog {
         System.out.println("Insertando Categorias de Ejemplo");
         hc.getTransaction().begin();
         // Borro todas las categorías antes
-        hc.getManager().createNamedQuery("Category.findAll", Category.class).getResultList().forEach(c -> {
-            hc.getManager().remove(c);
-        });
+//        hc.getManager().createNamedQuery("Category.findAll", Category.class).getResultList().forEach(c -> {
+//            hc.getManager().remove(c);
+//        });
 
         Category c1 = new Category("General"); // 1
         Category c2 = new Category("Dudas");  // 2
@@ -64,9 +62,9 @@ public class Blog {
         System.out.println("Insertando Usuarios de Ejemplo");
         hc.getTransaction().begin();
         // Borro todos los usuarios antes
-        hc.getManager().createNamedQuery("User.findAll", User.class).getResultList().forEach(u -> {
-            hc.getManager().remove(u);
-        });
+//        hc.getManager().createNamedQuery("User.findAll", User.class).getResultList().forEach(u -> {
+//            hc.getManager().remove(u);
+//        });
 
         User u1 = new User("Pepe Perez","pepe@pepe.es","1234"); // 5
         User u2 = new User("Ana Anaya","ana@anaya.es","1234"); // 6
@@ -85,10 +83,10 @@ public class Blog {
         // Post
         System.out.println("Insertando Post de Ejemplo");
         hc.getTransaction().begin();
-        // Borro todos los post antes
-        hc.getManager().createNamedQuery("Post.findAll", Post.class).getResultList().forEach(p -> {
-            hc.getManager().remove(p);
-        });
+//        // Borro todos los post antes
+//        hc.getManager().createNamedQuery("Post.findAll", Post.class).getResultList().forEach(p -> {
+//            hc.getManager().remove(p);
+//        });
 
         Post p1 = new Post("Post num 1", "http://post1.com", "Este es el post num 1", u1, c1); //10
         Post p2 = new Post("Post num 2", "http://post2.com", "Este es el post num 1", u2, c2); //11
@@ -108,9 +106,9 @@ public class Blog {
         System.out.println("Insertando Comentarios de Ejemplo");
         hc.getTransaction().begin();
         // Borro todos los post antes
-        hc.getManager().createNamedQuery("Comment.findAll", Comment.class).getResultList().forEach(c -> {
-            hc.getManager().remove(c);
-        });
+//        hc.getManager().createNamedQuery("Comment.findAll", Comment.class).getResultList().forEach(c -> {
+//            hc.getManager().remove(c);
+//        });
 
         Comment cm1 = new Comment("Comentario 01,", u1, p1);//15
         Comment cm2 = new Comment("Comentario 02,", u2, p2);//16
@@ -144,33 +142,36 @@ public class Blog {
         // Iniciamos las categorias
 
         System.out.println("GET Todas las categorías");
-        System.out.println(categoryController.getAllCategories());
+        List<CategoryDTO> lista = categoryController.getAllCategories();
+        System.out.println(lista);
 
-        System.out.println("GET Categoría con ID = 2"); // Mira en el explorador a ver que categoría hay
-        System.out.println(categoryController.getCategoryById(2L));
+        System.out.println("GET Categoría con ID: " + lista.get(1).getId()); // Mira en el explorador a ver que categoría hay
+        System.out.println(categoryController.getCategoryById(lista.get(1).getId()));
 
-        // id: 10
+        // id: 23
         System.out.println("POST Categoría");
-        CategoryDTO categoryDTO = CategoryDTO.builder()
+        CategoryDTO categoryDTO1 = CategoryDTO.builder()
                 .texto("Insert " + LocalDateTime.now())
                 .build();
-        System.out.println(categoryController.postCategory(categoryDTO));
+        categoryDTO1 = categoryController.postCategory(categoryDTO1);
+        System.out.println(categoryDTO1);
 
-        // id: 11
-        categoryDTO = CategoryDTO.builder()
+        // id: 24
+        CategoryDTO categoryDTO2 = CategoryDTO.builder()
                 .texto("Insert Otra " + LocalDateTime.now())
                 .build();
-        System.out.println(categoryController.postCategory(categoryDTO));
+        categoryDTO2 = categoryController.postCategory(categoryDTO2);
+        System.out.println(categoryDTO2);
 
-        System.out.println("UPDATE Categoría con ID 10");
-        Optional<CategoryDTO> optionalCategoryDTO = categoryController.getCategoryByIdOptional(10L);
+        System.out.println("UPDATE Categoría con ID:" + categoryDTO1.getId());
+        Optional<CategoryDTO> optionalCategoryDTO = categoryController.getCategoryByIdOptional(categoryDTO1.getId());
         if (optionalCategoryDTO.isPresent()) {
             optionalCategoryDTO.get().setTexto("Update " + LocalDateTime.now());
             System.out.println(categoryController.updateCategory(optionalCategoryDTO.get()));
         }
 
-        System.out.println("DELETE Categoría con ID 11");
-        optionalCategoryDTO = categoryController.getCategoryByIdOptional(11L);
+        System.out.println("DELETE Categoría con ID: " + categoryDTO2.getId());
+        optionalCategoryDTO = categoryController.getCategoryByIdOptional(categoryDTO2.getId());
         if (optionalCategoryDTO.isPresent()) {
             System.out.println(optionalCategoryDTO.get());
             System.out.println(categoryController.deleteCategory(optionalCategoryDTO.get()));
@@ -185,39 +186,45 @@ public class Blog {
         UserController userController = UserController.getInstance();
 
         System.out.println("GET Todos los usuarios");
-        System.out.println(userController.getAllUsers());
+        List<UserDTO> lista = userController.getAllUsers();
+        System.out.println(lista);
 
-        System.out.println("GET Usuario con ID = 5");
-        System.out.println(userController.getUserById(5L));
+        System.out.println("GET Usuario con ID: " + lista.get(1).getId());
+        System.out.println(userController.getUserById(lista.get(1).getId()));
 
-        // id 12
+        // TODO Lo logico aquí es hacer un findBy algo que no sea el ID, con eso tenemos el objeto
+        // Y con ello su id antes de ejecutarlo.
+
+        // id 25
         System.out.println("POST nuevo Usuario 1");
-        UserDTO userDTO = UserDTO.builder()
+        UserDTO userDTO1 = UserDTO.builder()
                 .nombre("Insert " + LocalDateTime.now())
                 .email("email" + LocalDateTime.now() + "@mail.com")
                 .password("1234")
                 .build();
-        System.out.println(userController.postUser(userDTO));
+        userDTO1 = userController.postUser(userDTO1);
+        System.out.println(userDTO1);
 
-        // ide 13
+        // ide 26
         System.out.println("POST nuevo Usuario 2");
-        userDTO = UserDTO.builder()
+        UserDTO userDTO2 = UserDTO.builder()
                 .nombre("Insert Otro" + LocalDateTime.now())
                 .email("emailOtro" + LocalDateTime.now() + "@mail.com")
                 .password("1234")
                 .build();
-        System.out.println(userController.postUser(userDTO));
+        userDTO2 = userController.postUser(userDTO2);
+        System.out.println(userDTO2);
 
-        System.out.println("UPDATE Usuario con ID 12");
-        Optional<UserDTO> optionalUserDTO = userController.getUserByIdOptional(12L);
+        System.out.println("UPDATE Usuario con ID: " + userDTO1.getId());
+        Optional<UserDTO> optionalUserDTO = userController.getUserByIdOptional(userDTO1.getId());
         if (optionalUserDTO.isPresent()) {
             optionalUserDTO.get().setNombre("Update " + LocalDateTime.now());
             optionalUserDTO.get().setEmail("emailUpdate" + LocalDateTime.now() + "@mail.com");
             System.out.println(userController.updateUser(optionalUserDTO.get()));
         }
 
-        System.out.println("DELETE Usuario con ID 13");
-        optionalUserDTO = userController.getUserByIdOptional(13L);
+        System.out.println("DELETE Usuario con ID: " + userDTO2.getId());
+        optionalUserDTO = userController.getUserByIdOptional(userDTO2.getId());
         if (optionalUserDTO.isPresent()) {
             System.out.println(userController.deleteUser(optionalUserDTO.get()));
         }
@@ -232,20 +239,24 @@ public class Blog {
 
         LoginController loginController = LoginController.getInstance();
 
+        // id 27
         System.out.println("Login con un usario que SI existe");
-        System.out.println(loginController.login("pepe@pepe.es", "1234"));
+        Optional<LoginDTO> login = loginController.login("pepe@pepe.es", "1234");
+        System.out.println(login.isPresent() ? "Login OK" : "Usuario o password incorrectos");
 
         System.out.println("Login con un usario que SI existe Y mal Password datos correctos");
-        System.out.println(loginController.login("pepe@pepe.es", "1255"));
+        Optional<LoginDTO> login2 = loginController.login("pepe@pepe.es", "12555");
+        System.out.println(login2.isPresent() ? "Login OK" : "Usuario o password incorrectos");
 
         System.out.println("Login con un usario que NO existe o mal Password datos correctos");
-        System.out.println(loginController.login("pepe@pepe.com", "1255"));
+        login2 = loginController.login("pepe@pepe2.es", "12555");
+        System.out.println(login2.isPresent() ? "Login OK" : "Usuario o password incorrectos");
 
         System.out.println("Logout de usuario que está logueado");
-        System.out.println(loginController.logout(5L)); // Mirar su ID
+        System.out.println(loginController.logout(login.get().getUser().getId())? "Logout OK" : "Usuarios no logueado en el sistema"); // Mirar su ID
 
-        System.out.println("Logout de usuario que no está logueado");
-        System.out.println(loginController.logout(999L));
+       System.out.println("Logout de usuario que no está logueado");
+      System.out.println(loginController.logout(99999999L)? "Logout OK" : "Usuarios no logueado en el sistema");
 
         System.out.println("FIN LOGIN");
     }

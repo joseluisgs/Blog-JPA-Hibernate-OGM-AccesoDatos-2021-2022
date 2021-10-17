@@ -83,7 +83,6 @@ public class Login {
                 "userId=" + userId +
                 ", ultimoAcceso=" + ultimoAcceso +
                 ", token='" + token + '\'' +
-                ", user=" + user +
                 '}';
     }
 }
