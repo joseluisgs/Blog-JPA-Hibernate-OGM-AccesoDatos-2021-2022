@@ -278,7 +278,7 @@ public class Blog {
 
         // Neceistamos mapearlos a objetos y no DTO, no debería ser así y trabajar con DTO completos, pero no es tan crucial para el CRUD
         PostDTO postDTO1 = PostDTO.builder()
-                .titulo("Insert " + LocalDateTime.now())
+                .titulo("Insert 1 " + LocalDateTime.now())
                 .contenido("Contenido " + Instant.now().toString())
                 .url("http://" + Math.random() + ".dominio.com")
                 .user(user)
@@ -294,7 +294,7 @@ public class Blog {
         category = lista.get(0).getCategory();
 
         PostDTO postDTO2 = PostDTO.builder()
-                .titulo("Insert Otro" + LocalDateTime.now())
+                .titulo("Insert Otro 2 " + LocalDateTime.now())
                 .contenido("Contenido Otro" + Instant.now().toString())
                 .url("http://" + Math.random() + ".dominio.com")
                 .user(user)
@@ -352,43 +352,39 @@ public class Blog {
         Post post = lista.get(0).getPost();
 
         CommentDTO commentDTO1 = CommentDTO.builder()
-                .texto("Comentario " + Instant.now().toString())
+                .texto("Comentario 1 - " + Instant.now().toString())
                 .user(user)
                 .post(post)
                 .build();
         commentDTO1 = commentController.postComment(commentDTO1);
         System.out.println(commentDTO1);
-//
-//        System.out.println("POST Insertando Comentario 2");
-//
-//        userController = UserController.getInstance();
-//        user = userController.getUserByIdOptional(1L).get(); // Sé que el id existe ...
-//        // Y un Post
-//        postController = PostController.getInstance();
-//        post = postController.getPostByIdOptional(3L).get();
-//
-//        // Neceistamos mapearlos a objetos y no DTO, no debería ser así y trabajar con DTO completos, pero no es tan crucial para el CRUD
-//        userMapper = new UserMapper();
-//        postMapper = new PostMapper();
-//        commentDTO = CommentDTO.builder()
-//                .texto("Comentario " + Instant.now().toString())
-//                .user(userMapper.fromDTO(user))
-//                .post(postMapper.fromDTO(post))
-//                .build();
-//        System.out.println(commentController.postComment(commentDTO));
-//
-//        System.out.println("UPDATE Comentario con ID 5");
-//        Optional<CommentDTO> optionalCommentDTO = commentController.getCommentByIdOptional(6L);
-//        if (optionalCommentDTO.isPresent()) {
-//            optionalCommentDTO.get().setTexto("Update " + LocalDateTime.now());
-//            System.out.println(commentController.updateComment(optionalCommentDTO.get()));
-//        }
-//
-//        System.out.println("DELETE Comentario con ID 7");
-//        optionalCommentDTO = commentController.getCommentByIdOptional(7L);
-//        if (optionalCommentDTO.isPresent()) {
-//            System.out.println(commentController.deleteComment(optionalCommentDTO.get()));
-//        }
+
+        System.out.println("POST Insertando Comentario 2");
+
+        user = lista.get(3).getUser();
+        // Y un Post
+        post = lista.get(3).getPost();
+
+        CommentDTO commentDTO2 = CommentDTO.builder()
+                .texto("Comentario 2 - " + Instant.now().toString())
+                .user(user)
+                .post(post)
+                .build();
+        commentDTO2 = commentController.postComment(commentDTO2);
+        System.out.println(commentDTO2);
+
+        System.out.println("UPDATE Comentario con ID: " + commentDTO1.getId());
+        Optional<CommentDTO> optionalCommentDTO = commentController.getCommentByIdOptional(commentDTO1.getId());
+        if (optionalCommentDTO.isPresent()) {
+            optionalCommentDTO.get().setTexto("Update " + LocalDateTime.now());
+            System.out.println(commentController.updateComment(optionalCommentDTO.get()));
+        }
+
+        System.out.println("DELETE Comentario con ID: " + commentDTO2.getId());
+        optionalCommentDTO = commentController.getCommentByIdOptional(commentDTO2.getId());
+        if (optionalCommentDTO.isPresent()) {
+            System.out.println(commentController.deleteComment(optionalCommentDTO.get()));
+        }
 //
 //        System.out.println("GET Dado un Post Obtener sus Comentarios Post --> Comentarios");
 //        postController.getPostById(2L).getComments().forEach(System.out::println);
