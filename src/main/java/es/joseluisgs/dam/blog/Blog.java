@@ -148,7 +148,7 @@ public class Blog {
         System.out.println("GET Categoría con ID: " + lista.get(1).getId()); // Mira en el explorador a ver que categoría hay
         System.out.println(categoryController.getCategoryById(lista.get(1).getId()));
 
-        // id: 23
+
         System.out.println("POST Categoría");
         CategoryDTO categoryDTO1 = CategoryDTO.builder()
                 .texto("Insert " + LocalDateTime.now())
@@ -156,7 +156,7 @@ public class Blog {
         categoryDTO1 = categoryController.postCategory(categoryDTO1);
         System.out.println(categoryDTO1);
 
-        // id: 24
+
         CategoryDTO categoryDTO2 = CategoryDTO.builder()
                 .texto("Insert Otra " + LocalDateTime.now())
                 .build();
@@ -192,10 +192,9 @@ public class Blog {
         System.out.println("GET Usuario con ID: " + lista.get(1).getId());
         System.out.println(userController.getUserById(lista.get(1).getId()));
 
-        // TODO Lo logico aquí es hacer un findBy algo que no sea el ID, con eso tenemos el objeto
+        // Lo logico aquí es hacer un findBy algo que no sea el ID, con eso tenemos el objeto
         // Y con ello su id antes de ejecutarlo.
 
-        // id 25
         System.out.println("POST nuevo Usuario 1");
         UserDTO userDTO1 = UserDTO.builder()
                 .nombre("Insert " + LocalDateTime.now())
@@ -205,7 +204,6 @@ public class Blog {
         userDTO1 = userController.postUser(userDTO1);
         System.out.println(userDTO1);
 
-        // ide 26
         System.out.println("POST nuevo Usuario 2");
         UserDTO userDTO2 = UserDTO.builder()
                 .nombre("Insert Otro" + LocalDateTime.now())
@@ -239,7 +237,6 @@ public class Blog {
 
         LoginController loginController = LoginController.getInstance();
 
-        // id 27
         System.out.println("Login con un usario que SI existe");
         Optional<LoginDTO> login = loginController.login("pepe@pepe.es", "1234");
         System.out.println(login.isPresent() ? "Login OK" : "Usuario o password incorrectos");
@@ -336,94 +333,88 @@ public class Blog {
         System.out.println("FIN POSTS");
     }
 
-    /*
     public void Comments() {
         System.out.println("INICIO COMENTARIOS");
 
         CommentController commentController = CommentController.getInstance();
 
         System.out.println("GET Todos los Comentarios");
-        System.out.println(commentController.getAllComments());
+        List<CommentDTO> lista = commentController.getAllComments();
+        System.out.println(lista);
 
-        System.out.println("GET Comentario con ID = 2");
-        System.out.println(commentController.getCommentById(2L));
+        System.out.println("GET Comentario con ID: " + lista.get(1).getId());
+        System.out.println(commentController.getCommentById(lista.get(1).getId()));
 
         System.out.println("POST Insertando Comentario 1");
 
-        UserController userController = UserController.getInstance();
-        UserDTO user = userController.getUserByIdOptional(1L).get(); // Sé que el id existe ...
+        User user = lista.get(0).getUser(); // Sé que el id existe ...
         // Y un Post
-        PostController postController = PostController.getInstance();
-        PostDTO post = postController.getPostByIdOptional(1L).get();
+        Post post = lista.get(0).getPost();
 
-        // Neceistamos mapearlos a objetos y no DTO, no debería ser así y trabajar con DTO completos, pero no es tan crucial para el CRUD
-        UserMapper userMapper = new UserMapper();
-        PostMapper postMapper = new PostMapper();
-        CommentDTO commentDTO = CommentDTO.builder()
+        CommentDTO commentDTO1 = CommentDTO.builder()
                 .texto("Comentario " + Instant.now().toString())
-                .user(userMapper.fromDTO(user))
-                .post(postMapper.fromDTO(post))
+                .user(user)
+                .post(post)
                 .build();
-        System.out.println(commentController.postComment(commentDTO));
-
-        System.out.println("POST Insertando Comentario 2");
-
-        userController = UserController.getInstance();
-        user = userController.getUserByIdOptional(1L).get(); // Sé que el id existe ...
-        // Y un Post
-        postController = PostController.getInstance();
-        post = postController.getPostByIdOptional(3L).get();
-
-        // Neceistamos mapearlos a objetos y no DTO, no debería ser así y trabajar con DTO completos, pero no es tan crucial para el CRUD
-        userMapper = new UserMapper();
-        postMapper = new PostMapper();
-        commentDTO = CommentDTO.builder()
-                .texto("Comentario " + Instant.now().toString())
-                .user(userMapper.fromDTO(user))
-                .post(postMapper.fromDTO(post))
-                .build();
-        System.out.println(commentController.postComment(commentDTO));
-
-        System.out.println("UPDATE Comentario con ID 5");
-        Optional<CommentDTO> optionalCommentDTO = commentController.getCommentByIdOptional(6L);
-        if (optionalCommentDTO.isPresent()) {
-            optionalCommentDTO.get().setTexto("Update " + LocalDateTime.now());
-            System.out.println(commentController.updateComment(optionalCommentDTO.get()));
-        }
-
-        System.out.println("DELETE Comentario con ID 7");
-        optionalCommentDTO = commentController.getCommentByIdOptional(7L);
-        if (optionalCommentDTO.isPresent()) {
-            System.out.println(commentController.deleteComment(optionalCommentDTO.get()));
-        }
-
-        System.out.println("GET Dado un Post Obtener sus Comentarios Post --> Comentarios");
-        postController.getPostById(2L).getComments().forEach(System.out::println);
-
-        System.out.println("GET Dado un usuario obtener sus comentarios Usuario --> Comentarios");
-        userController.getUserById(1L).getComentarios().forEach(System.out::println);
-
-        System.out.println("GET Dado un comentario saber su Post Comentario --> Post");
-        System.out.println(commentController.getCommentById(2L).getPost());
-
-        System.out.println("GET Dado un comentario saber su Autor Comentario --> Comentario");
-        System.out.println(commentController.getCommentById(2L).getUser());
-
-        System.out.println("DELETE Borrrando un post se borran sus comentarios? Post --> Comentario"); // Cascada
-        Optional<PostDTO> optionalPostDTO = postController.getPostByIdOptional(4L);
-        if (optionalPostDTO.isPresent()) {
-            System.out.println(postController.deletePost(optionalPostDTO.get()));
-        }
-
-        System.out.println("DELETE Borrrando un usuario se borran comentarios User --> Comentarios"); // Cascada
-        // No, porque no puedo borrar un usuario si tiene un post.
-        Optional<UserDTO> optionalUserDTO = userController.getUserByIdOptional(1L);
-        if (optionalUserDTO.isPresent()) {
-            System.out.println(userController.deleteUser(optionalUserDTO.get()));
-        }
+        commentDTO1 = commentController.postComment(commentDTO1);
+        System.out.println(commentDTO1);
+//
+//        System.out.println("POST Insertando Comentario 2");
+//
+//        userController = UserController.getInstance();
+//        user = userController.getUserByIdOptional(1L).get(); // Sé que el id existe ...
+//        // Y un Post
+//        postController = PostController.getInstance();
+//        post = postController.getPostByIdOptional(3L).get();
+//
+//        // Neceistamos mapearlos a objetos y no DTO, no debería ser así y trabajar con DTO completos, pero no es tan crucial para el CRUD
+//        userMapper = new UserMapper();
+//        postMapper = new PostMapper();
+//        commentDTO = CommentDTO.builder()
+//                .texto("Comentario " + Instant.now().toString())
+//                .user(userMapper.fromDTO(user))
+//                .post(postMapper.fromDTO(post))
+//                .build();
+//        System.out.println(commentController.postComment(commentDTO));
+//
+//        System.out.println("UPDATE Comentario con ID 5");
+//        Optional<CommentDTO> optionalCommentDTO = commentController.getCommentByIdOptional(6L);
+//        if (optionalCommentDTO.isPresent()) {
+//            optionalCommentDTO.get().setTexto("Update " + LocalDateTime.now());
+//            System.out.println(commentController.updateComment(optionalCommentDTO.get()));
+//        }
+//
+//        System.out.println("DELETE Comentario con ID 7");
+//        optionalCommentDTO = commentController.getCommentByIdOptional(7L);
+//        if (optionalCommentDTO.isPresent()) {
+//            System.out.println(commentController.deleteComment(optionalCommentDTO.get()));
+//        }
+//
+//        System.out.println("GET Dado un Post Obtener sus Comentarios Post --> Comentarios");
+//        postController.getPostById(2L).getComments().forEach(System.out::println);
+//
+//        System.out.println("GET Dado un usuario obtener sus comentarios Usuario --> Comentarios");
+//        userController.getUserById(1L).getComentarios().forEach(System.out::println);
+//
+//        System.out.println("GET Dado un comentario saber su Post Comentario --> Post");
+//        System.out.println(commentController.getCommentById(2L).getPost());
+//
+//        System.out.println("GET Dado un comentario saber su Autor Comentario --> Comentario");
+//        System.out.println(commentController.getCommentById(2L).getUser());
+//
+//        System.out.println("DELETE Borrrando un post se borran sus comentarios? Post --> Comentario"); // Cascada
+//        Optional<PostDTO> optionalPostDTO = postController.getPostByIdOptional(4L);
+//        if (optionalPostDTO.isPresent()) {
+//            System.out.println(postController.deletePost(optionalPostDTO.get()));
+//        }
+//
+//        System.out.println("DELETE Borrrando un usuario se borran comentarios User --> Comentarios"); // Cascada
+//        // No, porque no puedo borrar un usuario si tiene un post.
+//        Optional<UserDTO> optionalUserDTO = userController.getUserByIdOptional(1L);
+//        if (optionalUserDTO.isPresent()) {
+//            System.out.println(userController.deleteUser(optionalUserDTO.get()));
+//        }
 
         System.out.println("FIN COMENTARIOS");
     }
-
-    */
 }
