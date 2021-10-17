@@ -33,7 +33,7 @@ public class PostMapper extends BaseMapper<Post, PostDTO> {
                 .fechaPublicacion(item.getFechaPublicacion())
                 .user(item.getUser())
                 .category(item.getCategory())
-                .comments((List<Comment>) item.getComments())
+                .comments(item.getComments())
                 .build();
     }
 }

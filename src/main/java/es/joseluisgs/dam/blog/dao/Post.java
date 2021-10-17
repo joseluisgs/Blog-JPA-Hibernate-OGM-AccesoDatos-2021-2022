@@ -6,17 +6,22 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 // Consulta para obtener todos
-@NamedQuery(name = "Post.findAll", query = "SELECT p FROM Post p")
-// Consulta para obtener todos los post dado el id de un usuario
-@NamedQuery(name = "Post.getByUserId", query = "SELECT p FROM Post p WHERE p.user.id = ?1")
+@NamedQueries({
+    @NamedQuery(name = "Post.findAll", query = "SELECT p FROM Post p"),
+    // Consulta para obtener todos los post dado el id de un usuario
+    @NamedQuery(name = "Post.getByUserId", query = "SELECT p FROM Post p WHERE p.user.id = :userId"),
+})
 @Table(name = "post") // Ojo con la minuscula que en la tabla está así
 public class Post {
     private long id;
@@ -26,10 +31,20 @@ public class Post {
     private Timestamp fechaPublicacion;
     private User user;
     private Category category;
-    private Collection<Comment> comments;
+    private Set<Comment> comments;
+
+    public Post(String titulo, String url, String contenido, User user, Category category) {
+        this.titulo = titulo;
+        this.url = url;
+        this.contenido = contenido;
+        this.user = user;
+        this.category = category;
+        fechaPublicacion = Timestamp.from(Instant.now());
+        comments = new HashSet<Comment>();
+    }
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "id", nullable = false)
     public long getId() {
         return id;
@@ -103,7 +118,7 @@ public class Post {
         this.user = user;
     }
 
-    @ManyToOne
+    @ManyToOne()
     @JoinColumn(name = "category_id", referencedColumnName = "id", nullable = false)
     public Category getCategory() {
         return category;
@@ -114,12 +129,12 @@ public class Post {
     }
 
     // Pongo EAGER porque están en contexto diferentes y debememos conseguirlo
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "post", cascade = CascadeType. REMOVE) // cascade = CascadeType.ALL
-    public Collection<Comment> getComments() {
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "post", cascade = CascadeType.REMOVE) // cascade = CascadeType.ALL
+    public Set<Comment> getComments() {
         return comments;
     }
 
-    public void setComments(Collection<Comment> comments) {
+    public void setComments(Set<Comment> comments) {
         this.comments = comments;
     }
 

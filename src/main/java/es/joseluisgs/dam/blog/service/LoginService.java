@@ -35,7 +35,7 @@ public class LoginService extends BaseService<Login, Long, LoginRepository> {
             Cifrador cif = Cifrador.getInstance();
             if ((user != null) && user.getPassword().equals(cif.SHA256(userPassword))) {
                 Login insert = new Login();
-                insert.setUser(user);
+                insert.setId(user.getId());
                 insert.setUltimoAcceso(Timestamp.from(Instant.now()));
                 LoginDTO login = mapper.toDTO(repository.save(insert));
                 return login;

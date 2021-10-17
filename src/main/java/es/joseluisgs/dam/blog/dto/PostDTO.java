@@ -8,6 +8,7 @@ import lombok.Data;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @Builder
@@ -23,23 +24,20 @@ public class PostDTO {
     // Categoría a la que pertenece
     private Category category;
     // Para mejorar las relaciones y como es un dTO vamos a poner los ids
-    private Long user_id, category_id;
     // Lista de comentarios asociados
-    private List<Comment> comments;
+    private Set<Comment> comments;
 
 
     @Override
     public String toString() {
         return "PostDTO{" +
-                ", id=" + id +
+                "id=" + id +
                 ", titulo='" + titulo + '\'' +
                 ", url='" + url + '\'' +
                 ", contenido='" + contenido + '\'' +
                 ", fechaPublicacion=" + fechaPublicacion +
                 ", user=" + user +
                 ", category=" + category +
-                ", user_id=" + user_id +
-                ", category_id=" + category_id +
                 ", comments=" + comments +
                 '}';
     }

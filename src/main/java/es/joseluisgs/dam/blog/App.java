@@ -13,19 +13,19 @@ public class App {
 
         Blog blog = Blog.getInstance();
 
-        blog.initData();
+        // blog.initData();
 
         // Categorías
-        //blog.Categories();
+        // blog.Categories();
 
         // Usuarios
-        //blog.Users();
+        // blog.Users();
 
         // Login
-         blog.Login();
+       //  blog.Login();
 
         // Posts
-        // blog.Posts();
+        blog.Posts();
 
         // Comments
         // blog.Comments();

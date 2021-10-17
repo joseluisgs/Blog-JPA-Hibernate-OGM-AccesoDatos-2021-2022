@@ -1,10 +1,17 @@
 package es.joseluisgs.dam.blog.dao;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.Objects;
+import java.util.UUID;
 
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "comment") // Ojo con la minuscula que en la tabla está así
 // Todos los comentarios
 @NamedQuery(name = "Comment.findAll", query = "SELECT c FROM Comment c")
@@ -16,8 +23,16 @@ public class Comment {
     private User user;
     private Post post;
 
+    public Comment(String texto, User usuario, Post post) {
+        this.texto = texto;
+        this.user = usuario;
+        this.post = post;
+        fechaPublicacion = Timestamp.from(Instant.now());
+        uuid = UUID.randomUUID().toString();
+    }
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "id", nullable = false)
     public long getId() {
         return id;
