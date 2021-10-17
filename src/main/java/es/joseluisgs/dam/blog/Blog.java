@@ -1,12 +1,14 @@
 package es.joseluisgs.dam.blog;
 
 import es.joseluisgs.dam.blog.controller.*;
+import es.joseluisgs.dam.blog.dao.Category;
 import es.joseluisgs.dam.blog.dao.Comment;
-import es.joseluisgs.dam.blog.database.DataBaseController;
+import es.joseluisgs.dam.blog.dao.User;
 import es.joseluisgs.dam.blog.dto.CategoryDTO;
 import es.joseluisgs.dam.blog.dto.CommentDTO;
 import es.joseluisgs.dam.blog.dto.PostDTO;
 import es.joseluisgs.dam.blog.dto.UserDTO;
+import es.joseluisgs.dam.blog.manager.HibernateController;
 import es.joseluisgs.dam.blog.mapper.CategoryMapper;
 import es.joseluisgs.dam.blog.mapper.PostMapper;
 import es.joseluisgs.dam.blog.mapper.UserMapper;
@@ -34,36 +36,53 @@ public class Blog {
         return instance;
     }
 
-    public void checkService() {
-        DataBaseController controller = DataBaseController.getInstance();
-        try {
-            controller.open();
-            Optional<ResultSet> rs = controller.select("SELECT 'Hello World'");
-            if (rs.isPresent()) {
-                rs.get().first();
-                controller.close();
-            }
-        } catch (SQLException e) {
-            System.err.println("Error al conectar al servidor de Base de Datos: " + e.getMessage());
-            System.exit(1);
-        }
-    }
+    public void initData() {
+        HibernateController hc = HibernateController.getInstance();
+        hc.open();
+        // Categorías
+        System.out.println("Insertando Categorias de Ejemplo");
+        hc.getTransaction().begin();
+        // Borro todas las categorías antes
+        hc.getManager().createNamedQuery("Category.findAll", Category.class).getResultList().forEach(c-> {
+            hc.getManager().remove(c);
+        });
 
-    public void initDataBase() {
-        String sqlFile = System.getProperty("user.dir") + File.separator + "sql" + File.separator + "blog.sql";
-        System.out.println(sqlFile);
-        DataBaseController controller = DataBaseController.getInstance();
-        try {
-            controller.open();
-            controller.initData(sqlFile);
-            controller.close();
-        } catch (SQLException e) {
-            System.err.println("Error al conectar al servidor de Base de Datos: " + e.getMessage());
-            System.exit(1);
-        } catch (FileNotFoundException e) {
-            System.err.println("Error al leer el fichero de datos iniciales: " + e.getMessage());
-            System.exit(1);
-        }
+        Category c1 = new Category("General"); // 1
+        Category c2 = new Category("Dudas");  // 2
+        Category c3 = new Category("Evaluación"); // 3
+        Category c4 = new Category("Pruebas"); // 4
+
+        hc.getManager().persist(c1);
+        hc.getManager().persist(c2);
+        hc.getManager().persist(c3);
+        hc.getManager().persist(c4);
+
+        hc.getTransaction().commit();
+
+        // Usuarios
+        System.out.println("Insertando Usuarios de Ejemplo de Ejemplo");
+        hc.getTransaction().begin();
+        // Borro todos los usuarios antes
+        hc.getManager().createNamedQuery("User.findAll", User.class).getResultList().forEach(u-> {
+            hc.getManager().remove(u);
+        });
+
+        User u1 = new User("Pepe Perez","pepe@pepe.es","1234"); // 5
+        User u2 = new User("Ana Anaya","ana@anaya.es","1234"); // 6
+        User u3 = new User("Paco Perez","paco@perez.es","1234"); // 7
+        User u4 = new User("Son Goku","goku@dragonball.es","1234"); // 8
+        User u5 = new User("Chuck Norris","chuck@norris.es","1234");  // 9
+
+        hc.getManager().persist(u1);
+        hc.getManager().persist(u2);
+        hc.getManager().persist(u3);
+        hc.getManager().persist(u4);
+        hc.getManager().persist(u5);
+
+        hc.getTransaction().commit();
+
+        hc.close();
+
     }
 
     public void Categories() {
@@ -71,32 +90,36 @@ public class Blog {
 
         CategoryController categoryController = CategoryController.getInstance();
 
+        // Iniciamos las categorias
+
         System.out.println("GET Todas las categorías");
         System.out.println(categoryController.getAllCategories());
 
-        System.out.println("GET Categoría con ID = 2");
+        System.out.println("GET Categoría con ID = 2"); // Mira en el explorador a ver que categoría hay
         System.out.println(categoryController.getCategoryById(2L));
 
+        // id: 10
         System.out.println("POST Categoría");
         CategoryDTO categoryDTO = CategoryDTO.builder()
                 .texto("Insert " + LocalDateTime.now())
                 .build();
         System.out.println(categoryController.postCategory(categoryDTO));
 
+        // id: 11
         categoryDTO = CategoryDTO.builder()
                 .texto("Insert Otra " + LocalDateTime.now())
                 .build();
         System.out.println(categoryController.postCategory(categoryDTO));
 
-        System.out.println("UPDATE Categoría con ID 4");
-        Optional<CategoryDTO> optionalCategoryDTO = categoryController.getCategoryByIdOptional(4L);
+        System.out.println("UPDATE Categoría con ID 10");
+        Optional<CategoryDTO> optionalCategoryDTO = categoryController.getCategoryByIdOptional(10L);
         if (optionalCategoryDTO.isPresent()) {
             optionalCategoryDTO.get().setTexto("Update " + LocalDateTime.now());
             System.out.println(categoryController.updateCategory(optionalCategoryDTO.get()));
         }
 
-        System.out.println("DELETE Categoría con ID 6");
-        optionalCategoryDTO = categoryController.getCategoryByIdOptional(6L);
+        System.out.println("DELETE Categoría con ID 11");
+        optionalCategoryDTO = categoryController.getCategoryByIdOptional(11L);
         if (optionalCategoryDTO.isPresent()) {
             System.out.println(optionalCategoryDTO.get());
             System.out.println(categoryController.deleteCategory(optionalCategoryDTO.get()));
@@ -113,9 +136,10 @@ public class Blog {
         System.out.println("GET Todos los usuarios");
         System.out.println(userController.getAllUsers());
 
-        System.out.println("GET Usuario con ID = 2");
-        System.out.println(userController.getUserById(2L));
+        System.out.println("GET Usuario con ID = 5");
+        System.out.println(userController.getUserById(5L));
 
+        // id 12
         System.out.println("POST nuevo Usuario 1");
         UserDTO userDTO = UserDTO.builder()
                 .nombre("Insert " + LocalDateTime.now())
@@ -124,6 +148,7 @@ public class Blog {
                 .build();
         System.out.println(userController.postUser(userDTO));
 
+        // ide 13
         System.out.println("POST nuevo Usuario 2");
         userDTO = UserDTO.builder()
                 .nombre("Insert Otro" + LocalDateTime.now())
@@ -132,22 +157,24 @@ public class Blog {
                 .build();
         System.out.println(userController.postUser(userDTO));
 
-        System.out.println("UPDATE Usuario con ID 4");
-        Optional<UserDTO> optionalUserDTO = userController.getUserByIdOptional(4L);
+        System.out.println("UPDATE Usuario con ID 12");
+        Optional<UserDTO> optionalUserDTO = userController.getUserByIdOptional(12L);
         if (optionalUserDTO.isPresent()) {
             optionalUserDTO.get().setNombre("Update " + LocalDateTime.now());
             optionalUserDTO.get().setEmail("emailUpdate" + LocalDateTime.now() + "@mail.com");
             System.out.println(userController.updateUser(optionalUserDTO.get()));
         }
 
-        System.out.println("DELETE Usuario con ID 6");
-        optionalUserDTO = userController.getUserByIdOptional(6L);
+        System.out.println("DELETE Usuario con ID 13");
+        optionalUserDTO = userController.getUserByIdOptional(13L);
         if (optionalUserDTO.isPresent()) {
             System.out.println(userController.deleteUser(optionalUserDTO.get()));
         }
 
         System.out.println("FIN USUARIOS");
     }
+
+
 
     public void Login() {
         System.out.println("INICIO LOGIN");
@@ -164,14 +191,15 @@ public class Blog {
         System.out.println(loginController.login("pepe@pepe.com", "1255"));
 
         System.out.println("Logout de usuario que está logueado");
-        System.out.println(loginController.logout(1L));
+        System.out.println(loginController.logout(5L)); // Mirar su ID
 
         System.out.println("Logout de usuario que no está logueado");
-        System.out.println(loginController.logout(33L));
+        System.out.println(loginController.logout(999L));
 
         System.out.println("FIN LOGIN");
     }
 
+    /*
     public void Posts() {
         System.out.println("INICIO POSTS");
 
@@ -328,4 +356,6 @@ public class Blog {
 
         System.out.println("FIN COMENTARIOS");
     }
+
+    */
 }

@@ -3,7 +3,6 @@ package es.joseluisgs.dam.blog.dao;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -72,7 +71,6 @@ public class Post {
     }
 
     @Basic
-    @CreationTimestamp // Es una marca de tiempo
     @Column(name = "fecha_publicacion", nullable = false)
     public Timestamp getFechaPublicacion() {
         return fechaPublicacion;
