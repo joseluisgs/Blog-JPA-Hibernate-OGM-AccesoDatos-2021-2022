@@ -57,6 +57,7 @@ public class LoginRepository implements CrudRespository<Login, Long> {
             hc.getTransaction().begin();
             // Ojo que borrar implica que estemos en la misma sesión y nos puede dar problemas, por eso lo recuperamos otra vez
             Login login = hc.getManager().find(Login.class, userId);
+            // System.out.println(login);
             hc.getManager().remove(login);
             hc.getTransaction().commit();
             hc.close();

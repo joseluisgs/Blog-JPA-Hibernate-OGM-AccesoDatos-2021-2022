@@ -34,18 +34,16 @@ public class LoginService extends BaseService<Login, Long, LoginRepository> {
             User user = getUserByMail(userMail);
             Cifrador cif = Cifrador.getInstance();
             if ((user != null) && user.getPassword().equals(cif.SHA256(userPassword))) {
-                // System.out.println("SI");
                 Login insert = new Login();
-                insert.setUser(user);
+                insert.setId(user.getId());
                 insert.setUltimoAcceso(Timestamp.from(Instant.now()));
                 LoginDTO login = mapper.toDTO(repository.save(insert));
-                login.setUser(user);
                 return login;
             }
-        } finally {
+        } catch (Exception e) {
             return null;
         }
-
+        return null;
     }
 
     private User getUserByMail(String userMail) throws SQLException {

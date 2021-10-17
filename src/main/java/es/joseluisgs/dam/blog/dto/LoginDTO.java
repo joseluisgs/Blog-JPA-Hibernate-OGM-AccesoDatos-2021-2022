@@ -10,14 +10,14 @@ import java.sql.Timestamp;
 @Data
 @Builder
 public class LoginDTO {
-    private User user;
+    private long id;
     private Timestamp ultimoAcceso;
     private String token;
 
     @Override
     public String toString() {
         return "LoginDTO{" +
-                "user=" + user +
+                "userID=" + id +
                 ", ultimoAcceso=" + ultimoAcceso +
                 ", token='" + token + '\'' +
                 '}';

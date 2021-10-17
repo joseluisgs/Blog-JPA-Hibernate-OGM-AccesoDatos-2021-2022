@@ -6,6 +6,8 @@ import es.joseluisgs.dam.blog.mapper.PostMapper;
 import es.joseluisgs.dam.blog.repository.PostRepository;
 
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.List;
 
 public class PostService extends BaseService<Post, Long, PostRepository> {
@@ -29,6 +31,8 @@ public class PostService extends BaseService<Post, Long, PostRepository> {
     }
 
     public PostDTO postPost(PostDTO postDTO) throws SQLException {
+        // Le ponemos la fecha
+        postDTO.setFechaPublicacion(Timestamp.from(Instant.now()));
         Post post = this.save(mapper.fromDTO(postDTO));
         return mapper.toDTO(post);
     }

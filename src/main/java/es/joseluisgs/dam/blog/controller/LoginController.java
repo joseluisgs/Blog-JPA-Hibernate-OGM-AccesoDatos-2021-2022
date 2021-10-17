@@ -1,14 +1,12 @@
 package es.joseluisgs.dam.blog.controller;
 
-import com.google.gson.ExclusionStrategy;
-import com.google.gson.FieldAttributes;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import es.joseluisgs.dam.blog.dao.Login;
 import es.joseluisgs.dam.blog.dto.LoginDTO;
 import es.joseluisgs.dam.blog.repository.LoginRepository;
 import es.joseluisgs.dam.blog.service.LoginService;
 
 import java.sql.SQLException;
+import java.util.Optional;
 
 public class LoginController {
     private static LoginController controller = null;
@@ -16,18 +14,6 @@ public class LoginController {
     // Mi Servicio unido al repositorio
     private final LoginService loginService;
 
-    // Para evitar sacar el password del usuario y el user_id
-    ExclusionStrategy strategy = new ExclusionStrategy() {
-        @Override
-        public boolean shouldSkipClass(Class<?> clazz) {
-            return false;
-        }
-
-        @Override
-        public boolean shouldSkipField(FieldAttributes field) {
-            return field.getName().startsWith("password") || field.getName().startsWith("user_id");
-        }
-    };
 
     // Implementamos nuestro Singleton para el controlador
     private LoginController(LoginService userService) {
@@ -42,32 +28,27 @@ public class LoginController {
     }
 
     // Ejemplo de operaciones
-    public String login(String userMail, String userPassword) {
+    public Optional<LoginDTO> login(String userMail, String userPassword) {
         try {
             LoginDTO login = loginService.login(userMail, userPassword);
             if (login != null) {
-                final Gson prettyGson = new GsonBuilder()
-                        .addSerializationExclusionStrategy(strategy)
-                        .setPrettyPrinting()
-                        .create();
-                return prettyGson.toJson(login);
-            } else
-                return "Error Login: Usuario/a no existe o los datos son incorrectos";
-        } catch (SQLException e) {
-            return "Error Login: Usuario/a no existe o los datos son incorrectos";
-        }
-
-    }
-
-    public String logout(Long userId) {
-        try {
-            if (loginService.logout(userId)) {
-                return "Logout OK";
-            } else {
-                return "Error Logout: Usuario/a no existe o los datos son incorrectos";
+               return Optional.of(login);
             }
         } catch (SQLException e) {
-            return "Error Logout: Usuario/a no existe o los datos son incorrectos";
+            Optional.empty();
+        }
+        return  Optional.empty();
+    }
+
+    public boolean logout(Long userId) {
+        try {
+            if (loginService.logout(userId))
+                return true;
+            else
+                return false;
+        } catch (SQLException e) {
+            System.err.println("Error Login Controller Logout: " + e.getMessage());
+            return false;
         }
     }
 }

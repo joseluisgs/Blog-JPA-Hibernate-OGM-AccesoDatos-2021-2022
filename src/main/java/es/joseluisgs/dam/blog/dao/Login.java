@@ -3,7 +3,6 @@ package es.joseluisgs.dam.blog.dao;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -17,16 +16,14 @@ import java.util.Objects;
 // Consulta por si queremos buscar logins por tokens
 @NamedQuery(name = "Login.getByToken", query = "SELECT l FROM Login l WHERE l.token = ?1")
 public class Login {
-    private long userId;
+    private long id;
     private Timestamp ultimoAcceso;
     private String token;
-    private User user;
 
     @Id
-    @Column(name = "user_id", nullable = false)
-    public long getUserId() {
+    public long getId() {
         // return userId;
-        return user.getId();
+        return id;
     }
 
 //    public void setUserId(long userId) {
@@ -34,7 +31,6 @@ public class Login {
 //    }
 
     @Basic
-    @CreationTimestamp // Es una marca de tiempo
     @Column(name = "ultimo_acceso", nullable = false)
     public Timestamp getUltimoAcceso() {
         return ultimoAcceso;
@@ -60,32 +56,21 @@ public class Login {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Login login = (Login) o;
-        return userId == login.userId && Objects.equals(ultimoAcceso, login.ultimoAcceso) && Objects.equals(token, login.token);
+        return id == login.id && Objects.equals(ultimoAcceso, login.ultimoAcceso) && Objects.equals(token, login.token);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(userId, ultimoAcceso, token);
+        return Objects.hash(id, ultimoAcceso, token);
     }
 
-    @OneToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-        this.userId = user.getId();
-    }
 
     @Override
     public String toString() {
         return "Login{" +
-                "userId=" + userId +
+                "id=" + id +
                 ", ultimoAcceso=" + ultimoAcceso +
                 ", token='" + token + '\'' +
-                ", user=" + user +
                 '}';
     }
 }

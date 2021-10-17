@@ -41,7 +41,7 @@ public class PostRepository implements CrudRespository<Post, Long> {
             hc.close();
             return post;
         } catch (Exception e) {
-            throw new SQLException("Error PostRepository al insertar post en BD");
+            throw new SQLException("Error PostRepository al insertar post en BD: " + e.getMessage());
         } finally {
             if (hc.getTransaction().isActive()) {
                 hc.getTransaction().rollback();
@@ -61,7 +61,7 @@ public class PostRepository implements CrudRespository<Post, Long> {
             hc.close();
             return post;
         } catch (Exception e) {
-            throw new SQLException("Error PostRepository al actualizar post con id: " + post.getId());
+            throw new SQLException("Error PostRepository al actualizar post con id: " + post.getId() + " " + e.getMessage());
         } finally {
             if (hc.getTransaction().isActive()) {
                 hc.getTransaction().rollback();
@@ -84,7 +84,7 @@ public class PostRepository implements CrudRespository<Post, Long> {
             hc.close();
             return post;
         } catch (Exception e) {
-            throw new SQLException("Error PostRepository al eliminar post con id: " + post.getId());
+            throw new SQLException("Error PostRepository al eliminar post con id: " + post.getId() + " " + e.getMessage());
         } finally {
             if (hc.getTransaction().isActive()) {
                 hc.getTransaction().rollback();
@@ -94,10 +94,14 @@ public class PostRepository implements CrudRespository<Post, Long> {
     }
 
     public List<Post> getByUserId(Long userId) {
+        // Aquí habria que cambiar la consulta porque JPA no deja hacer NamedQuerys con Join en Mongo
         HibernateController hc = HibernateController.getInstance();
         hc.open();
-        List<Post> list = hc.getManager().createNamedQuery("Post.getByUserId", Post.class)
-                .setParameter(1, userId).getResultList();
+        // Vamos a cambiar la consulta, par facilitar las cosas a JPA
+//        List<Post> list = hc.getManager().createNamedQuery("Post.getByUserId", Post.class)
+//                .setParameter("userId", userId).getResultList();
+        List<Post> list = hc.getManager().createNamedQuery("User.getMyPosts", Post.class)
+                .setParameter("userId", userId).getResultList();
         hc.close();
         return list;
     }

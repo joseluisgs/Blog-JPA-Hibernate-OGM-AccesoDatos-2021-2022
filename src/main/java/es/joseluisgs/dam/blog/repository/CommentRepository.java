@@ -44,7 +44,7 @@ public class CommentRepository implements CrudRespository<Comment, Long> {
             hc.close();
             return comment;
         } catch (Exception e) {
-            throw new SQLException("Error CommentRepository al insertar comentario en BD");
+            throw new SQLException("Error CommentRepository al insertar comentario en BD: " + e.getMessage());
         } finally {
             if (hc.getTransaction().isActive()) {
                 hc.getTransaction().rollback();
@@ -66,7 +66,7 @@ public class CommentRepository implements CrudRespository<Comment, Long> {
             hc.close();
             return comment;
         } catch (Exception e) {
-            throw new SQLException("Error CommentRepository al actualizar comentario con id: " + comment.getId());
+            throw new SQLException("Error CommentRepository al actualizar comentario con id: " + comment.getId() + " " + e.getMessage());
         } finally {
             if (hc.getTransaction().isActive()) {
                 hc.getTransaction().rollback();
@@ -89,7 +89,7 @@ public class CommentRepository implements CrudRespository<Comment, Long> {
             hc.close();
             return comment;
         } catch (Exception e) {
-            throw new SQLException("Error CommentRepository al eliminar comentario con id: " + comment.getId());
+            throw new SQLException("Error CommentRepository al eliminar comentario con id: " + comment.getId() + " " + e.getMessage());
         } finally {
             if (hc.getTransaction().isActive()) {
                 hc.getTransaction().rollback();

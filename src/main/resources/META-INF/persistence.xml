@@ -5,12 +5,12 @@
              version="2.2">
 
     <!-- Nombre de la unidad de persistencia -->
-    <persistence-unit name="default">
+    <persistence-unit name="default" transaction-type="JTA">
         <description>Ejemplo Blog Hibernate JPA</description>
 
         <!-- Indicamos el “provider” que es la implementación de JPA que estamos usando.
        En nuestro ejemplo hibernate, pero existen otros proveedores como EclipseLink: -->
-        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+        <provider>org.hibernate.ogm.jpa.HibernateOgmPersistence</provider>
 
         <!-- Definiremos las clases que representan “entidades”. Por cada clase
    debemos utilizar la etiqueta <class> cuyo contenido debe incluir el paquete y el
@@ -24,10 +24,13 @@
 
         <!-- Añadimos las propiedades de conexión a la base de datos MySQL -->
         <properties>
-            <property name="hibernate.connection.url" value="jdbc:mariadb://localhost:3306/blog"/>
-            <property name="hibernate.connection.driver_class" value="org.mariadb.jdbc.Driver"/>
-            <property name="hibernate.connection.user" value="blog"/>
-            <property name="hibernate.connection.password" value="blog1234"/>
+            <property name="hibernate.ogm.datastore.provider" value="mongodb" />
+            <property name="hibernate.ogm.datastore.database" value="blog" />
+            <property name="hibernate.ogm.datastore.host" value="127.0.0.1" />
+            <property name="hibernate.ogm.datastore.port" value="27017" />
+            <property name="hibernate.ogm.datastore.username" value="mongoadmin" />
+            <property name="hibernate.ogm.datastore.password" value="mongopass" />
+            <property name="hibernate.ogm.datastore.create_database" value="true" />
             <!-- Para ver las consultas
             <property name="hibernate.show_sql" value="true"/>
             <property name="hibernate.format_sql" value="true"/>  -->
@@ -37,7 +40,6 @@
                create: creates the schema, destroying previous data.
                create-drop: drop the schema when the SessionFactory is closed explicitly, typically when the application is stopped.
                none: does nothing with the schema, makes no changes to the database-->
-            <property name="hibernate.hbm2ddl.auto" value="update"/>
         </properties>
     </persistence-unit>
 </persistence>
