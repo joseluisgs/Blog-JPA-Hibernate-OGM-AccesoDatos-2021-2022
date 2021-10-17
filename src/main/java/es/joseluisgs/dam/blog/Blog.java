@@ -261,76 +261,82 @@ public class Blog {
         System.out.println("FIN LOGIN");
     }
 
-    /*
     public void Posts() {
         System.out.println("INICIO POSTS");
 
         PostController postController = PostController.getInstance();
 
         System.out.println("GET Todos los Post");
-        System.out.println(postController.getAllPost());
+        List<PostDTO> lista = postController.getAllPost();
+        System.out.println(lista);
 
-        System.out.println("GET Post con ID = 2");
-        System.out.println(postController.getPostById(2L));
+        System.out.println("GET Post con ID: " + lista.get(1).getId());
+        System.out.println(postController.getPostById(lista.get(1).getId()));
 
         System.out.println("POST Insertando Post 1");
-        // Lo primero que necesito es un usuario...
-        UserController userController = UserController.getInstance();
-        UserDTO user = userController.getUserByIdOptional(1L).get(); // Sé que el id existe ...
-        // Y una categoría
-        CategoryController categoryController = CategoryController.getInstance();
-        CategoryDTO category = categoryController.getCategoryByIdOptional(1L).get();
+        // Lo primero que necesito es un usuario... busco uno ya de la lista
+        User user = lista.get(3).getUser();
+        // Y una categoría, busco una ya de la lista...
+        Category category =lista.get(1).getCategory();
 
         // Neceistamos mapearlos a objetos y no DTO, no debería ser así y trabajar con DTO completos, pero no es tan crucial para el CRUD
-        UserMapper userMapper = new UserMapper();
-        CategoryMapper categoryMapper = new CategoryMapper();
-
-        System.out.println("POST Insertando Post 2");
-        PostDTO postDTO = PostDTO.builder()
+        PostDTO postDTO1 = PostDTO.builder()
                 .titulo("Insert " + LocalDateTime.now())
                 .contenido("Contenido " + Instant.now().toString())
                 .url("http://" + Math.random() + ".dominio.com")
-                .user(userMapper.fromDTO(user))
-                .category(categoryMapper.fromDTO(category))
+                .user(user)
+                .category(category)
                 .build();
 
-        System.out.println(postController.postPost(postDTO));
-        user = userController.getUserByIdOptional(1L).get();
-        category = categoryController.getCategoryByIdOptional(1L).get();
-        postDTO = PostDTO.builder()
+        postDTO1 = postController.postPost(postDTO1);
+        System.out.println(postDTO1);
+
+        System.out.println("POST Insertando Post 2");
+
+        user = lista.get(4).getUser();
+        category = lista.get(0).getCategory();
+
+        PostDTO postDTO2 = PostDTO.builder()
                 .titulo("Insert Otro" + LocalDateTime.now())
                 .contenido("Contenido Otro" + Instant.now().toString())
                 .url("http://" + Math.random() + ".dominio.com")
-                .user(userMapper.fromDTO(user))
-                .category(categoryMapper.fromDTO(category))
+                .user(user)
+                .category(category)
                 .build();
-        System.out.println(postController.postPost(postDTO));
 
-        System.out.println("UPDATE Post con ID 5");
-        Optional<PostDTO> optionalPostDTO = postController.getPostByIdOptional(5L);
+        postDTO2 = postController.postPost(postDTO2);
+        System.out.println(postDTO2);
+
+        System.out.println("UPDATE Post con ID: " + lista.get(4).getId());
+        Optional<PostDTO> optionalPostDTO = postController.getPostByIdOptional(lista.get(4).getId());
         if (optionalPostDTO.isPresent()) {
             optionalPostDTO.get().setTitulo("Update " + LocalDateTime.now());
             optionalPostDTO.get().setContenido("emailUpdate" + LocalDateTime.now() + "@mail.com");
             System.out.println(postController.updatePost(optionalPostDTO.get()));
         }
 
-        System.out.println("DELETE Post con ID 6");
-        optionalPostDTO = postController.getPostByIdOptional(6L);
+        System.out.println("DELETE Post con ID: " + postDTO2.getId());
+        // No lo borra por la bidireccionalidad... Hay que borralo de usuario
+        optionalPostDTO = postController.getPostByIdOptional(postDTO2.getId());
         if (optionalPostDTO.isPresent()) {
             System.out.println(postController.deletePost(optionalPostDTO.get()));
         }
 
-        System.out.println("GET By Post con User ID 1 usando la Relación Post --> Usuario");
-        postController.getPostByUserId(1L).forEach(System.out::println);
+        System.out.println("GET Usuario de Post: " + postDTO1.getId() + " usando la Relación Post --> Usuario");
+        System.out.println(postDTO1.getUser());
 
-        System.out.println("GET By Post con User ID 1 usando la Relación Usuario --> Post");
-        user = userController.getUserByIdOptional(1L).get();
+        // System.out.println("GET Posts con User ID: " + postDTO1.getUser().getId() + " usando la Relación Post --> Usuario");
+        // postController.getPostByUserId(postDTO1.getUser().getId()).forEach(System.out::println);
+        // No deja hacerla porque JPA de Mongo no permite hacer las relaciones en la consulta ;)
+
+        System.out.println("GET By Post con User ID: " + postDTO1.getUser().getId() + "usando la Relación Usuario --> Post");
         // Por cierto, prueba quitando el FetchType.EAGER de getPost de User y mira que pasa. ¿Lo entiendes?
-        user.getPosts().forEach(System.out::println);
+        postDTO1.getUser().getPosts().forEach(System.out::println);
 
         System.out.println("FIN POSTS");
     }
 
+    /*
     public void Comments() {
         System.out.println("INICIO COMENTARIOS");
 

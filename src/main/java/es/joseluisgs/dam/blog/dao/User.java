@@ -116,7 +116,7 @@ public class User {
         cambia el comportamiento default con @OneToMany(fetch=FetchType.EAGER).
         Esto hace que friends se instancie junto con el resto de los atributos.
      */
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "user", orphanRemoval = true, cascade = CascadeType.ALL) // Estudiar la cascada
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "user", orphanRemoval = true, cascade = CascadeType.REMOVE) // Estudiar la cascada
     public Set<Post> getPosts() {
         return posts;
     }

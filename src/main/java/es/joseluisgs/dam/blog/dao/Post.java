@@ -20,7 +20,7 @@ import java.util.Set;
 @NamedQueries({
     @NamedQuery(name = "Post.findAll", query = "SELECT p FROM Post p"),
     // Consulta para obtener todos los post dado el id de un usuario
-    @NamedQuery(name = "Post.getByUserId", query = "SELECT p FROM Post p WHERE p.user.id = ?1"),
+    @NamedQuery(name = "Post.getByUserId", query = "SELECT p FROM Post p WHERE p.user.id = :userId"),
 })
 @Table(name = "post") // Ojo con la minuscula que en la tabla está así
 public class Post {
@@ -118,7 +118,7 @@ public class Post {
         this.user = user;
     }
 
-    @ManyToOne
+    @ManyToOne()
     @JoinColumn(name = "category_id", referencedColumnName = "id", nullable = false)
     public Category getCategory() {
         return category;
