@@ -29,7 +29,7 @@ Se ha implementado el desarrollo del un blog a nivel de backend para el acceso a
 Debes entender que es un ejemplo didáctico para clase, por lo que parte de la solución simplemente es para mostrar distintas técnicas y patrones y por lo tanto 
 puede que no sea la más óptima o adecuada a niveles de producción o empresarial. Tenlo en cuenta.
 
-Este ejemplo, su arquitectura y parte de su solución proviene del anterior ejemplo visto en clase y que puedes encontrar [aquí](https://github.com/joseluisgs/Blog-Relacional-AccesoDatos-2021-2022). La versión relacional usando Hibernate y JPA la tienes en [este enlace](Blog-Hibernate-ORM-AccesoDatos-2021-2022) disponible.
+Este ejemplo, su arquitectura y parte de su solución proviene del anterior ejemplo visto en clase y que puedes encontrar [aquí](https://github.com/joseluisgs/Blog-Relacional-AccesoDatos-2021-2022). La versión relacional usando Hibernate y JPA la tienes en [este enlace](https://github.com/joseluisgs/Blog-Hibernate-ORM-AccesoDatos-2021-2022) disponible.
 
 A lo largo de este desarrollo actualizaremos el ejemplo anterior para trabajar con tecnología orientada a objetos y con ella usar Hibernate y JPA para realizar el Mapeo Objeto-Documentos con nuestra base de datos NoSQL con MongoDB.
 
