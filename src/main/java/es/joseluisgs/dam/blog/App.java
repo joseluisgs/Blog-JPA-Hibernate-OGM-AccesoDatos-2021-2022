@@ -13,19 +13,20 @@ public class App {
 
         Blog blog = Blog.getInstance();
 
-        // blog.initData();
+        if (properties.readProperty("database.init").equals("true"))
+            blog.initDataBase();
 
         // Categorías
-        // blog.Categories();
+        blog.Categories();
 
         // Usuarios
-        // blog.Users();
+        blog.Users();
 
         // Login
-       //  blog.Login();
+       blog.Login();
 
         // Posts
-        // blog.Posts();
+        blog.Posts();
 
         // Comments
         blog.Comments();

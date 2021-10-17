@@ -35,17 +35,19 @@ public class Blog {
         return instance;
     }
 
-    public void initData() {
+    public void initDataBase() {
         HibernateController hc = HibernateController.getInstance();
         hc.open();
         // Categorías
         System.out.println("Insertando Categorias de Ejemplo");
-        hc.getTransaction().begin();
-        // Borro todas las categorías antes
+//        hc.getTransaction().begin();
+//        // Borro todas las categorías antes
 //        hc.getManager().createNamedQuery("Category.findAll", Category.class).getResultList().forEach(c -> {
 //            hc.getManager().remove(c);
 //        });
+//        hc.getTransaction().commit();
 
+        hc.getTransaction().begin();
         Category c1 = new Category("General"); // 1
         Category c2 = new Category("Dudas");  // 2
         Category c3 = new Category("Evaluación"); // 3
@@ -60,12 +62,14 @@ public class Blog {
 
         // Usuarios
         System.out.println("Insertando Usuarios de Ejemplo");
-        hc.getTransaction().begin();
-        // Borro todos los usuarios antes
+//        hc.getTransaction().begin();
+//        // Borro todos los usuarios antes
 //        hc.getManager().createNamedQuery("User.findAll", User.class).getResultList().forEach(u -> {
 //            hc.getManager().remove(u);
 //        });
+//        hc.getTransaction().commit();
 
+        hc.getTransaction().begin();
         User u1 = new User("Pepe Perez","pepe@pepe.es","1234"); // 5
         User u2 = new User("Ana Anaya","ana@anaya.es","1234"); // 6
         User u3 = new User("Paco Perez","paco@perez.es","1234"); // 7
@@ -82,12 +86,14 @@ public class Blog {
 
         // Post
         System.out.println("Insertando Post de Ejemplo");
-        hc.getTransaction().begin();
+//        hc.getTransaction().begin();
 //        // Borro todos los post antes
 //        hc.getManager().createNamedQuery("Post.findAll", Post.class).getResultList().forEach(p -> {
 //            hc.getManager().remove(p);
 //        });
+//        hc.getTransaction().commit();
 
+        hc.getTransaction().begin();
         Post p1 = new Post("Post num 1", "http://post1.com", "Este es el post num 1", u1, c1); //10
         Post p2 = new Post("Post num 2", "http://post2.com", "Este es el post num 1", u2, c2); //11
         Post p3 = new Post("Post num 3", "http://post3.com", "Este es el post num 1", u3, c3); //12
@@ -104,12 +110,14 @@ public class Blog {
 
         // Comentarios
         System.out.println("Insertando Comentarios de Ejemplo");
-        hc.getTransaction().begin();
-        // Borro todos los post antes
+//        hc.getTransaction().begin();
+//        // Borro todos los post antes
 //        hc.getManager().createNamedQuery("Comment.findAll", Comment.class).getResultList().forEach(c -> {
 //            hc.getManager().remove(c);
 //        });
+//        hc.getTransaction().commit();
 
+        hc.getTransaction().begin();
         Comment cm1 = new Comment("Comentario 01,", u1, p1);//15
         Comment cm2 = new Comment("Comentario 02,", u2, p2);//16
         Comment cm3 = new Comment("Comentario 03,", u3, p2);//17
@@ -249,8 +257,8 @@ public class Blog {
         login2 = loginController.login("pepe@pepe2.es", "12555");
         System.out.println(login2.isPresent() ? "Login OK" : "Usuario o password incorrectos");
 
-        System.out.println("Logout de usuario que está logueado");
-        System.out.println(loginController.logout(login.get().getId())? "Logout OK" : "Usuarios no logueado en el sistema"); // Mirar su ID
+        // System.out.println("Logout de usuario que está logueado");
+        // System.out.println(loginController.logout(login.get().getId())? "Logout OK" : "Usuarios no logueado en el sistema"); // Mirar su ID
 
        System.out.println("Logout de usuario que no está logueado");
       System.out.println(loginController.logout(99999999L)? "Logout OK" : "Usuarios no logueado en el sistema");
