@@ -13,13 +13,13 @@ public class App {
 
         Blog blog = Blog.getInstance();
 
-        blog.initData();
+        // blog.initData();
 
         // Categorías
         blog.Categories();
 
         // Usuarios
-       blog.Users();
+        blog.Users();
 
         // Login
         blog.Login();

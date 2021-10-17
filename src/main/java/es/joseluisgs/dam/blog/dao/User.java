@@ -27,7 +27,6 @@ public class User {
     private String email;
     private String password;
     private Date fechaRegistro;
-    private Login login;
     private Set<Post> posts;
     private Set<Comment> comments;
 
@@ -108,14 +107,6 @@ public class User {
 
     // Cuidado que hay que poner los orphan para que no se queden colgados los 1 a 1 al quitar los login
     // https://stackoverflow.com/questions/2302802/how-to-fix-the-hibernate-object-references-an-unsaved-transient-instance-save # 96
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-    public Login getLogin() {
-        return login;
-    }
-
-    public void setLogin(Login loginById) {
-        this.login = loginById;
-    }
 
     // @OneToMany(fetch = FetchType.EAGER, mappedBy = "topic", cascade = CascadeType.ALL)
     // Si lo ponemos a lazy perdemos el contecto de la sesión.. a veces y te puedes saltarte una excepción
@@ -155,7 +146,6 @@ public class User {
                 ", email='" + email + '\'' +
                 // ", password='" + password + '\'' + Evitamos
                 ", fechaRegistro=" + fechaRegistro +
-                ", login=" + login +
                 // Cuidado aqui con las llamadas recursivas No me interesa imprimir los post del usuario, pueden ser muchos
                  // ", posts=" + posts + // Podriamos quitarlos para no verlos
                 // Tampoco saco los comentarios

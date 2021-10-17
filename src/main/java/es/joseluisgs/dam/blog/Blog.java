@@ -253,7 +253,7 @@ public class Blog {
         System.out.println(login2.isPresent() ? "Login OK" : "Usuario o password incorrectos");
 
         System.out.println("Logout de usuario que está logueado");
-        System.out.println(loginController.logout(login.get().getUser().getId())? "Logout OK" : "Usuarios no logueado en el sistema"); // Mirar su ID
+        System.out.println(loginController.logout(login.get().getId())? "Logout OK" : "Usuarios no logueado en el sistema"); // Mirar su ID
 
        System.out.println("Logout de usuario que no está logueado");
       System.out.println(loginController.logout(99999999L)? "Logout OK" : "Usuarios no logueado en el sistema");
