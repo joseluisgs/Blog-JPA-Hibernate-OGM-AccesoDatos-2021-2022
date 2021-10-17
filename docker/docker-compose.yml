@@ -40,7 +40,7 @@ services:
       ME_CONFIG_MONGODB_ADMINUSERNAME: mongoadmin
       ME_CONFIG_MONGODB_ADMINPASSWORD: mongopass
       ME_CONFIG_MONGODB_SERVER: mongodb-server
-    # restart: always
+    restart: unless-stopped
 
 # Mi volumenes de datos compartidos
 volumes:
