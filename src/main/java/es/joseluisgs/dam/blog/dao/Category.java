@@ -17,9 +17,12 @@ public class Category {
     private long id;
     private String texto;
 
+    public Category(String texto) {
+        this.texto = texto;
+    }
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // La clave es autonumérica en MariaDB
-    @Column(name = "id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     public long getId() {
         return id;
     }
