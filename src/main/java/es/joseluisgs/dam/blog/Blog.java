@@ -322,9 +322,12 @@ public class Blog {
         System.out.println("GET Usuario de Post: " + postDTO1.getId() + " usando la Relación Post --> Usuario");
         System.out.println(postDTO1.getUser());
 
-        // System.out.println("GET Posts con User ID: " + postDTO1.getUser().getId() + " usando la Relación Post --> Usuario");
+        System.out.println("GET Posts con User ID: " + postDTO1.getUser().getId() + " usando la Relación Post --> Usuario");
         // postController.getPostByUserId(postDTO1.getUser().getId()).forEach(System.out::println);
         // No deja hacerla porque JPA de Mongo no permite hacer las relaciones en la consulta ;)
+        // Habria que cambiarlo en el servicio donde se hace esta consulta
+        PostDTO finalPostDTO = postDTO1;
+        lista.stream().filter(p -> p.getUser().getId() == finalPostDTO.getUser().getId());
 
         System.out.println("GET By Post con User ID: " + postDTO1.getUser().getId() + "usando la Relación Usuario --> Post");
         // Por cierto, prueba quitando el FetchType.EAGER de getPost de User y mira que pasa. ¿Lo entiendes?
@@ -385,31 +388,35 @@ public class Blog {
         if (optionalCommentDTO.isPresent()) {
             System.out.println(commentController.deleteComment(optionalCommentDTO.get()));
         }
-//
-//        System.out.println("GET Dado un Post Obtener sus Comentarios Post --> Comentarios");
-//        postController.getPostById(2L).getComments().forEach(System.out::println);
-//
-//        System.out.println("GET Dado un usuario obtener sus comentarios Usuario --> Comentarios");
-//        userController.getUserById(1L).getComentarios().forEach(System.out::println);
-//
-//        System.out.println("GET Dado un comentario saber su Post Comentario --> Post");
-//        System.out.println(commentController.getCommentById(2L).getPost());
-//
-//        System.out.println("GET Dado un comentario saber su Autor Comentario --> Comentario");
-//        System.out.println(commentController.getCommentById(2L).getUser());
-//
-//        System.out.println("DELETE Borrrando un post se borran sus comentarios? Post --> Comentario"); // Cascada
-//        Optional<PostDTO> optionalPostDTO = postController.getPostByIdOptional(4L);
-//        if (optionalPostDTO.isPresent()) {
-//            System.out.println(postController.deletePost(optionalPostDTO.get()));
-//        }
-//
-//        System.out.println("DELETE Borrrando un usuario se borran comentarios User --> Comentarios"); // Cascada
-//        // No, porque no puedo borrar un usuario si tiene un post.
-//        Optional<UserDTO> optionalUserDTO = userController.getUserByIdOptional(1L);
-//        if (optionalUserDTO.isPresent()) {
-//            System.out.println(userController.deleteUser(optionalUserDTO.get()));
-//        }
+
+        System.out.println("GET Dado un post ID: " + post.getId() + " Obtener sus Comentarios Post --> Comentarios");
+        // No deja hacerlo porque JPA no permite Join con Mongo
+        // postController.getPostById(2L).getComments().forEach(System.out::println);
+        post.getComments().forEach(System.out::println);
+
+        System.out.println("GET Dado un usuario ID: " + user.getId() + " obtener sus comentarios Usuario --> Comentarios");
+        // JPA en Mongo no permite las Queris con Joins
+        // userController.getUserById(1L).getComentarios().forEach(System.out::println);
+        user.getComments().forEach(System.out::println);
+
+        System.out.println("GET Dado un comentario ID: " + commentDTO1.getId() + " saber su Post Comentario --> Post");
+        // System.out.println(commentController.getCommentById(2L).getPost());
+        System.out.println(commentDTO1.getPost());
+
+        System.out.println("GET Dado un comentario ID: " + commentDTO1.getId() + " saber su Autor Comentario --> Comentario");
+        // System.out.println(commentController.getCommentById(2L).getUser());
+        System.out.println(commentDTO1.getUser());
+
+        System.out.println("DELETE Borrrando un post ID: " + post.getId() + " se borran sus comentarios? Post --> Comentario"); // Cascada
+        PostController postController = PostController.getInstance();
+        PostMapper postMapper = new PostMapper();
+        System.out.println(postController.deletePost(postMapper.toDTO(post)));
+
+        System.out.println("DELETE Borrrando un usuario usuario ID: " + user.getId() + "  se borran comentarios User --> Comentarios"); // Cascada
+        // Cascada de post y de post comentarios
+        UserController userController = UserController.getInstance();
+        UserMapper userMapper = new UserMapper();
+        System.out.println(userController.deleteUser(userMapper.toDTO(user)));
 
         System.out.println("FIN COMENTARIOS");
     }

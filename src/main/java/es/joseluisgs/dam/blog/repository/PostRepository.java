@@ -94,6 +94,7 @@ public class PostRepository implements CrudRespository<Post, Long> {
     }
 
     public List<Post> getByUserId(Long userId) {
+        // Aquí habria que cambiar la consulta porque JPA no deja hacer NamedQuerys con Join en Mongo
         HibernateController hc = HibernateController.getInstance();
         hc.open();
         List<Post> list = hc.getManager().createNamedQuery("Post.getByUserId", Post.class)
