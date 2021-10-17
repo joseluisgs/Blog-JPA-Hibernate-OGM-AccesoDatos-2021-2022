@@ -3,6 +3,7 @@ package es.joseluisgs.dam.blog;
 import es.joseluisgs.dam.blog.controller.*;
 import es.joseluisgs.dam.blog.dao.Category;
 import es.joseluisgs.dam.blog.dao.Comment;
+import es.joseluisgs.dam.blog.dao.Post;
 import es.joseluisgs.dam.blog.dao.User;
 import es.joseluisgs.dam.blog.dto.CategoryDTO;
 import es.joseluisgs.dam.blog.dto.CommentDTO;
@@ -43,7 +44,7 @@ public class Blog {
         System.out.println("Insertando Categorias de Ejemplo");
         hc.getTransaction().begin();
         // Borro todas las categorías antes
-        hc.getManager().createNamedQuery("Category.findAll", Category.class).getResultList().forEach(c-> {
+        hc.getManager().createNamedQuery("Category.findAll", Category.class).getResultList().forEach(c -> {
             hc.getManager().remove(c);
         });
 
@@ -60,10 +61,10 @@ public class Blog {
         hc.getTransaction().commit();
 
         // Usuarios
-        System.out.println("Insertando Usuarios de Ejemplo de Ejemplo");
+        System.out.println("Insertando Usuarios de Ejemplo");
         hc.getTransaction().begin();
         // Borro todos los usuarios antes
-        hc.getManager().createNamedQuery("User.findAll", User.class).getResultList().forEach(u-> {
+        hc.getManager().createNamedQuery("User.findAll", User.class).getResultList().forEach(u -> {
             hc.getManager().remove(u);
         });
 
@@ -78,6 +79,56 @@ public class Blog {
         hc.getManager().persist(u3);
         hc.getManager().persist(u4);
         hc.getManager().persist(u5);
+
+        hc.getTransaction().commit();
+
+        // Post
+        System.out.println("Insertando Post de Ejemplo");
+        hc.getTransaction().begin();
+        // Borro todos los post antes
+        hc.getManager().createNamedQuery("Post.findAll", Post.class).getResultList().forEach(p -> {
+            hc.getManager().remove(p);
+        });
+
+        Post p1 = new Post("Post num 1", "http://post1.com", "Este es el post num 1", u1, c1); //10
+        Post p2 = new Post("Post num 2", "http://post2.com", "Este es el post num 1", u2, c2); //11
+        Post p3 = new Post("Post num 3", "http://post3.com", "Este es el post num 1", u3, c3); //12
+        Post p4 = new Post("Post num 4", "http://post4.com", "Este es el post num 1", u1, c1); //13
+        Post p5 = new Post("Post num 5", "http://post5.com", "Este es el post num 1", u2, c3); //14
+
+        hc.getManager().persist(p1);
+        hc.getManager().persist(p2);
+        hc.getManager().persist(p3);
+        hc.getManager().persist(p4);
+        hc.getManager().persist(p5);
+
+        hc.getTransaction().commit();
+
+        // Comentarios
+        System.out.println("Insertando Comentarios de Ejemplo");
+        hc.getTransaction().begin();
+        // Borro todos los post antes
+        hc.getManager().createNamedQuery("Comment.findAll", Comment.class).getResultList().forEach(c -> {
+            hc.getManager().remove(c);
+        });
+
+        Comment cm1 = new Comment("Comentario 01,", u1, p1);//15
+        Comment cm2 = new Comment("Comentario 02,", u2, p2);//16
+        Comment cm3 = new Comment("Comentario 03,", u3, p2);//17
+        Comment cm4 = new Comment("Comentario 04,", u1, p3);//18
+        Comment cm5 = new Comment("Comentario 05,", u4, p4);//19
+        Comment cm6 = new Comment("Comentario 06,", u1, p3);//20
+        Comment cm7 = new Comment("Comentario 07,", u4, p4);//21
+        Comment cm8 = new Comment("Comentario 08,", u2, p3);//22
+
+        hc.getManager().persist(cm1);
+        hc.getManager().persist(cm2);
+        hc.getManager().persist(cm3);
+        hc.getManager().persist(cm4);
+        hc.getManager().persist(cm5);
+        hc.getManager().persist(cm6);
+        hc.getManager().persist(cm7);
+        hc.getManager().persist(cm8);
 
         hc.getTransaction().commit();
 

@@ -5,10 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.Date;
-import java.util.Collection;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 // @Data Ojo con el data que entra en un bucle infinito por la definición de la relación muchos a uno, debes hacer el string a mano
 // y Quitar los posts
@@ -39,6 +36,8 @@ public class User {
         this.email = email;
         this.password = Cifrador.getInstance().SHA256(password);
         this.fechaRegistro = new Date(System.currentTimeMillis());
+        this.posts = new HashSet<Post>();
+        this.comments = new HashSet<Comment>();
     }
 
     @Id

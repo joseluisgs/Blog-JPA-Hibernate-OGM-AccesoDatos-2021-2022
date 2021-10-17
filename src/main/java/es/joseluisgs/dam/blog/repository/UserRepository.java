@@ -41,7 +41,7 @@ public class UserRepository implements CrudRespository<User, Long> {
             hc.close();
             return user;
         } catch (Exception e) {
-            throw new SQLException("Error UserRepository al insertar usuario en BD");
+            throw new SQLException("Error UserRepository al insertar usuario en BD:" + e.getMessage());
         } finally {
             if (hc.getTransaction().isActive()) {
                 hc.getTransaction().rollback();
@@ -61,7 +61,7 @@ public class UserRepository implements CrudRespository<User, Long> {
             hc.close();
             return user;
         } catch (Exception e) {
-            throw new SQLException("Error UserRepository al actualizar usuario con id: " + user.getId());
+            throw new SQLException("Error UserRepository al actualizar usuario con id: " + user.getId() + ": " + e.getMessage());
         } finally {
             if (hc.getTransaction().isActive()) {
                 hc.getTransaction().rollback();
@@ -84,7 +84,7 @@ public class UserRepository implements CrudRespository<User, Long> {
             hc.close();
             return user;
         } catch (Exception e) {
-            throw new SQLException("Error UserRepository al eliminar usuario con id: " + user.getId());
+            throw new SQLException("Error UserRepository al eliminar usuario con id: " + user.getId() + ": " + e.getMessage());
         } finally {
             if (hc.getTransaction().isActive()) {
                 hc.getTransaction().rollback();
