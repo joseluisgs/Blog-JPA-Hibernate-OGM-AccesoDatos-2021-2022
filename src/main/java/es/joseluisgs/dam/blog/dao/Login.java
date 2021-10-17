@@ -3,7 +3,6 @@ package es.joseluisgs.dam.blog.dao;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -34,7 +33,6 @@ public class Login {
 //    }
 
     @Basic
-    @CreationTimestamp // Es una marca de tiempo
     @Column(name = "ultimo_acceso", nullable = false)
     public Timestamp getUltimoAcceso() {
         return ultimoAcceso;

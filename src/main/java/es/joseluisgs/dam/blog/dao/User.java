@@ -1,12 +1,11 @@
 package es.joseluisgs.dam.blog.dao;
 
+import es.joseluisgs.dam.blog.utils.Cifrador;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.ColumnTransformer;
-import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
-import java.sql.Date;
+import java.util.Date;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.Set;
@@ -18,11 +17,13 @@ import java.util.Set;
 @AllArgsConstructor
 @Table(name = "user") // Ojo con la minuscula que en la tabla está así
 // Todos los usuarios
-@NamedQuery(name = "User.findAll", query = "SELECT u FROM User u")
-// Todos los usuarios con emial indicados
-@NamedQuery(name = "User.getByMail", query = "SELECT u FROM User u WHERE u.email = ?1")
-// Todos los post de un usuario
-@NamedQuery(name = "User.getMyPosts", query = "SELECT u.posts FROM User u WHERE u.id = ?1")
+@NamedQueries({
+    @NamedQuery(name = "User.findAll", query = "SELECT u FROM User u"),
+    // Todos los usuarios con emial indicados, ojo, no usar parámetros
+    @NamedQuery(name = "User.getByMail", query = "SELECT u FROM User u WHERE u.email = :email"),
+    // Todos los post de un usuario
+    @NamedQuery(name = "User.getMyPosts", query = "SELECT u.posts FROM User u WHERE u.id = ?1")
+})
 public class User {
     private long id;
     private String nombre;
@@ -33,8 +34,15 @@ public class User {
     private Set<Post> posts;
     private Set<Comment> comments;
 
+    public User(String nombre, String email, String password) {
+        this.nombre = nombre;
+        this.email = email;
+        this.password = Cifrador.getInstance().SHA256(password);
+        this.fechaRegistro = new Date(System.currentTimeMillis());
+    }
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "id", nullable = false)
     public long getId() {
         return id;
@@ -65,7 +73,7 @@ public class User {
     }
 
     @Basic
-    @ColumnTransformer(write = " SHA(?) ")
+    // @ColumnTransformer(write = " SHA(?) ")
     // Le decimos que lo transforme con esta función. Nos ahorramos cifrarlo nosotros
     @Column(name = "password", nullable = false, length = 100)
     public String getPassword() {
@@ -77,7 +85,6 @@ public class User {
     }
 
     @Basic
-    @CreationTimestamp // Es una marca de tiempo
     @Column(name = "fecha_registro", nullable = false)
     public Date getFechaRegistro() {
         return fechaRegistro;
@@ -100,7 +107,9 @@ public class User {
         return Objects.hash(id, nombre, email, password, fechaRegistro);
     }
 
-    @OneToOne(mappedBy = "user")
+    // Cuidado que hay que poner los orphan para que no se queden colgados los 1 a 1 al quitar los login
+    // https://stackoverflow.com/questions/2302802/how-to-fix-the-hibernate-object-references-an-unsaved-transient-instance-save # 96
+    @OneToOne(mappedBy = "user", orphanRemoval = true, cascade = CascadeType.ALL)
     public Login getLogin() {
         return login;
     }

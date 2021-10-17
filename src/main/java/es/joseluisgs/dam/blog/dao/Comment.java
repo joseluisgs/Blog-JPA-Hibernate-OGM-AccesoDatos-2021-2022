@@ -1,7 +1,5 @@
 package es.joseluisgs.dam.blog.dao;
 
-import org.hibernate.annotations.CreationTimestamp;
-
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.Objects;
@@ -40,7 +38,6 @@ public class Comment {
     }
 
     @Basic
-    @CreationTimestamp // Es una marca de tiempo
     @Column(name = "fecha_publicacion", nullable = false)
     public Timestamp getFechaPublicacion() {
         return fechaPublicacion;
