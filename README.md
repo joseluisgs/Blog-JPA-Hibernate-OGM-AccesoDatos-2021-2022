@@ -4,7 +4,7 @@ a Objetos con Documentos usando Hibernate OGM y JPA e implementando distintas t�
 
 [![Kotlin](https://img.shields.io/badge/Code-Java-blue)](https://www.java.com/es/)
 [![LISENCE](https://img.shields.io/badge/Lisence-MIT-green)]()
-![GitHub](https://img.shields.io/github/last-commit/joseluisgs/Blog-Hibernate-AccesoDatos-2021-2022)
+![GitHub](https://img.shields.io/github/last-commit/joseluisgs/Blog-Hibernate-OGM-AccesoDatos-2021-2022)
 
 - [Blog-Hibernate-OGM-AccesoDatos-2021-2022](#blog-hibernate-ogm-accesodatos-2021-2022)
   - [Descripción](#descripción)
