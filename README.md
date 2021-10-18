@@ -16,6 +16,7 @@ a Objetos con Documentos usando Hibernate OGM y JPA e implementando distintas t�
     - [Arquitectura](#arquitectura)
   - [Hibernate](#hibernate)
   - [JPA: Java Persistence API](#jpa-java-persistence-api)
+  - [MongoDB](#mongodb)
   - [Diagrama de la Persistencia](#diagrama-de-la-persistencia)
   - [Ejecución](#ejecución)
     - [Docker](#docker)
@@ -69,6 +70,10 @@ convirtiendo dichas acciones en sentencias NoSQLy liberándonos de realizar las 
 Java Persistence API, más conocida por sus siglas JPA, es la API de persistencia desarrollada para la plataforma Java EE.
 JPA es una especificación y no un Framework como tal, por lo tanto necesita de alguien que lo implemente, por ejemplo Hibernate.
 
+## MongoDB
+MongoDB es un sistema de base de datos NoSQL, orientado a documentos y de código abierto. En lugar de guardar los datos en tablas, tal y como se hace en las bases de datos relacionales, 
+MongoDB guarda estructuras de datos BSON (una especificación similar a JSON) con un esquema dinámico, haciendo que la integración de los datos en ciertas aplicaciones sea más fácil y rápida.
+
 ## Diagrama de la Persistencia 
 El diagrama de la persistencia generada puede verse en esta imagen.
 ![diagrama](./diagrams/Persistence.png);
@@ -79,8 +84,6 @@ Entrar en el directorio docker y ejecutar
 ```sh
 $ docker-compose up -d
 ```
-Para iniciar la BD con algunos datos modifica el fichero [docker/mariadb/sql/init.sql](docker/mariadb/sql/init-db.sql)
-
 
 ### Mongo Express o cliente de Bases de Datos NoSQL MongoDB
 Debes conectarte a express http://localhost:8081/
