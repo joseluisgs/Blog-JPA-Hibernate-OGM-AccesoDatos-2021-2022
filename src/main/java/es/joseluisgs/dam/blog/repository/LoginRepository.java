@@ -28,7 +28,6 @@ public class LoginRepository implements CrudRespository<Login, Long> {
             login.setToken(uuid.toString());
             hc.getManager().persist(login);
             hc.getTransaction().commit();
-            hc.close();
             return login;
         } catch (Exception e) {
             throw new SQLException("Error LoginRepository al insertar login en BD");
@@ -60,7 +59,6 @@ public class LoginRepository implements CrudRespository<Login, Long> {
             // System.out.println(login);
             hc.getManager().remove(login);
             hc.getTransaction().commit();
-            hc.close();
             return true;
         } catch (Exception e) {
             throw new SQLException("Error LoginRepository al eliminar login con id: " + userId);

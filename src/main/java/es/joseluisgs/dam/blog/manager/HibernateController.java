@@ -30,8 +30,11 @@ public class HibernateController {
     }
 
     public void open() {
-        entityManagerFactory = Persistence.createEntityManagerFactory("default");
-        manager = entityManagerFactory.createEntityManager();
+        if(entityManagerFactory == null || !entityManagerFactory.isOpen())
+            entityManagerFactory = Persistence.createEntityManagerFactory("default");
+        if(manager == null || !manager.isOpen())
+            manager = entityManagerFactory.createEntityManager();
+
         transaction = manager.getTransaction();
     }
 
