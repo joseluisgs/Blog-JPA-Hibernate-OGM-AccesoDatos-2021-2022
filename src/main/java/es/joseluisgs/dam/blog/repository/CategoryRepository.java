@@ -38,7 +38,6 @@ public class CategoryRepository implements CrudRespository<Category, Long> {
             hc.getTransaction().begin();
             hc.getManager().persist(category);
             hc.getTransaction().commit();
-            hc.close();
             return category;
         } catch (Exception e) {
             throw new SQLException("Error CategoryRepository al insertar cantegoria en BD: " + e.getMessage());
@@ -58,7 +57,6 @@ public class CategoryRepository implements CrudRespository<Category, Long> {
             hc.getTransaction().begin();
             hc.getManager().merge(category);
             hc.getTransaction().commit();
-            hc.close();
             return category;
         } catch (Exception e) {
             throw new SQLException("Error CategoryRepository al actualizar categoria con id: " + category.getId() + " " + e.getMessage());
@@ -81,7 +79,6 @@ public class CategoryRepository implements CrudRespository<Category, Long> {
             category = hc.getManager().find(Category.class, category.getId());
             hc.getManager().remove(category);
             hc.getTransaction().commit();
-            hc.close();
             return category;
         } catch (Exception e) {
             throw new SQLException("Error CategoryRepository al eliminar categoria con id: " + category.getId() + " " + e.getMessage());

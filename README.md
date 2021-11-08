@@ -1,12 +1,12 @@
-# Blog-Hibernate-OGM-AccesoDatos-2021-2022
+# Blog-JPA-Hibernate-OGM-AccesoDatos-2021-2022
 Ejemplo de desarrollo de un blog (backend básico) para Acceso a Datos, usando una base de datos NoSQL MongoDB realizando el Mapeo 
 a Objetos con Documentos usando Hibernate OGM y JPA e implementando distintas técnicas y patrones de Acceso a Datos vistos en clase.
 
 [![Kotlin](https://img.shields.io/badge/Code-Java-blue)](https://www.java.com/es/)
 [![LISENCE](https://img.shields.io/badge/Lisence-MIT-green)]()
-![GitHub](https://img.shields.io/github/last-commit/joseluisgs/Blog-Hibernate-AccesoDatos-2021-2022)
+![GitHub](https://img.shields.io/github/last-commit/joseluisgs/Blog-JPA-Hibernate-OGM-AccesoDatos-2021-2022)
 
-- [Blog-Hibernate-OGM-AccesoDatos-2021-2022](#blog-hibernate-ogm-accesodatos-2021-2022)
+- [Blog-JPA-Hibernate-OGM-AccesoDatos-2021-2022](#blog-jpa-hibernate-ogm-accesodatos-2021-2022)
   - [Descripción](#descripción)
   - [Tecnologías](#tecnologías)
   - [Enunciado](#enunciado)
@@ -16,6 +16,7 @@ a Objetos con Documentos usando Hibernate OGM y JPA e implementando distintas t�
     - [Arquitectura](#arquitectura)
   - [Hibernate](#hibernate)
   - [JPA: Java Persistence API](#jpa-java-persistence-api)
+  - [MongoDB](#mongodb)
   - [Diagrama de la Persistencia](#diagrama-de-la-persistencia)
   - [Ejecución](#ejecución)
     - [Docker](#docker)
@@ -29,7 +30,7 @@ Se ha implementado el desarrollo del un blog a nivel de backend para el acceso a
 Debes entender que es un ejemplo didáctico para clase, por lo que parte de la solución simplemente es para mostrar distintas técnicas y patrones y por lo tanto 
 puede que no sea la más óptima o adecuada a niveles de producción o empresarial. Tenlo en cuenta.
 
-Este ejemplo, su arquitectura y parte de su solución proviene del anterior ejemplo visto en clase y que puedes encontrar [aquí](https://github.com/joseluisgs/Blog-Relacional-AccesoDatos-2021-2022). La versión relacional usando Hibernate y JPA la tienes en [este enlace](https://github.com/joseluisgs/Blog-Hibernate-ORM-AccesoDatos-2021-2022) disponible.
+Este ejemplo, su arquitectura y parte de su solución proviene del anterior ejemplo visto en clase y que puedes encontrar [aquí](https://github.com/joseluisgs/Blog-Relacional-AccesoDatos-2021-2022). La versión relacional usando Hibernate y JPA la tienes en [este enlace](https://github.com/joseluisgs/Blog-JPA-Hibernate-ORM-AccesoDatos-2021-2022) disponible.
 
 A lo largo de este desarrollo actualizaremos el ejemplo anterior para trabajar con tecnología orientada a objetos y con ella usar Hibernate y JPA para realizar el Mapeo Objeto-Documentos con nuestra base de datos NoSQL con MongoDB.
 
@@ -69,6 +70,10 @@ convirtiendo dichas acciones en sentencias NoSQLy liberándonos de realizar las 
 Java Persistence API, más conocida por sus siglas JPA, es la API de persistencia desarrollada para la plataforma Java EE.
 JPA es una especificación y no un Framework como tal, por lo tanto necesita de alguien que lo implemente, por ejemplo Hibernate.
 
+## MongoDB
+MongoDB es un sistema de base de datos NoSQL, orientado a documentos y de código abierto. En lugar de guardar los datos en tablas, tal y como se hace en las bases de datos relacionales, 
+MongoDB guarda estructuras de datos BSON (una especificación similar a JSON) con un esquema dinámico, haciendo que la integración de los datos en ciertas aplicaciones sea más fácil y rápida.
+
 ## Diagrama de la Persistencia 
 El diagrama de la persistencia generada puede verse en esta imagen.
 ![diagrama](./diagrams/Persistence.png);
@@ -79,8 +84,6 @@ Entrar en el directorio docker y ejecutar
 ```sh
 $ docker-compose up -d
 ```
-Para iniciar la BD con algunos datos modifica el fichero [docker/mariadb/sql/init.sql](docker/mariadb/sql/init-db.sql)
-
 
 ### Mongo Express o cliente de Bases de Datos NoSQL MongoDB
 Debes conectarte a express http://localhost:8081/

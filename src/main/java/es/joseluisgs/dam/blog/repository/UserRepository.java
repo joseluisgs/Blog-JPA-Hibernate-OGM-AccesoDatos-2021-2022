@@ -38,7 +38,6 @@ public class UserRepository implements CrudRespository<User, Long> {
             hc.getTransaction().begin();
             hc.getManager().persist(user);
             hc.getTransaction().commit();
-            hc.close();
             return user;
         } catch (Exception e) {
             throw new SQLException("Error UserRepository al insertar usuario en BD:" + e.getMessage());
@@ -58,7 +57,6 @@ public class UserRepository implements CrudRespository<User, Long> {
             hc.getTransaction().begin();
             hc.getManager().merge(user);
             hc.getTransaction().commit();
-            hc.close();
             return user;
         } catch (Exception e) {
             throw new SQLException("Error UserRepository al actualizar usuario con id: " + user.getId() + ": " + e.getMessage());
@@ -81,7 +79,6 @@ public class UserRepository implements CrudRespository<User, Long> {
             user = hc.getManager().find(User.class, user.getId());
             hc.getManager().remove(user);
             hc.getTransaction().commit();
-            hc.close();
             return user;
         } catch (Exception e) {
             throw new SQLException("Error UserRepository al eliminar usuario con id: " + user.getId() + ": " + e.getMessage());

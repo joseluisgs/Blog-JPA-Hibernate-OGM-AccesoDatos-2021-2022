@@ -38,7 +38,6 @@ public class PostRepository implements CrudRespository<Post, Long> {
             hc.getTransaction().begin();
             hc.getManager().persist(post);
             hc.getTransaction().commit();
-            hc.close();
             return post;
         } catch (Exception e) {
             throw new SQLException("Error PostRepository al insertar post en BD: " + e.getMessage());
@@ -58,7 +57,6 @@ public class PostRepository implements CrudRespository<Post, Long> {
             hc.getTransaction().begin();
             hc.getManager().merge(post);
             hc.getTransaction().commit();
-            hc.close();
             return post;
         } catch (Exception e) {
             throw new SQLException("Error PostRepository al actualizar post con id: " + post.getId() + " " + e.getMessage());
@@ -81,7 +79,6 @@ public class PostRepository implements CrudRespository<Post, Long> {
             post = hc.getManager().find(Post.class, post.getId());
             hc.getManager().remove(post);
             hc.getTransaction().commit();
-            hc.close();
             return post;
         } catch (Exception e) {
             throw new SQLException("Error PostRepository al eliminar post con id: " + post.getId() + " " + e.getMessage());

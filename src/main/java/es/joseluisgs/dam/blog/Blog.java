@@ -1,5 +1,10 @@
 package es.joseluisgs.dam.blog;
 
+import com.mongodb.ConnectionString;
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
 import es.joseluisgs.dam.blog.controller.*;
 import es.joseluisgs.dam.blog.dao.Category;
 import es.joseluisgs.dam.blog.dao.Comment;
@@ -12,6 +17,7 @@ import es.joseluisgs.dam.blog.mapper.PostMapper;
 import es.joseluisgs.dam.blog.mapper.UserMapper;
 import es.joseluisgs.dam.blog.repository.CommentRepository;
 import es.joseluisgs.dam.blog.service.CommentService;
+import org.bson.Document;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -19,6 +25,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,18 +43,13 @@ public class Blog {
     }
 
     public void initDataBase() {
+        // Borramos los datos previos
+        removeData();
+
         HibernateController hc = HibernateController.getInstance();
         hc.open();
         // Categorías
-        System.out.println("Insertando Categorias de Ejemplo");
-//        hc.getTransaction().begin();
-//        // Borro todas las categorías antes
-//        hc.getManager().createNamedQuery("Category.findAll", Category.class).getResultList().forEach(c -> {
-//            hc.getManager().remove(c);
-//        });
-//        hc.getTransaction().commit();
-
-        hc.getTransaction().begin();
+         hc.getTransaction().begin();
         Category c1 = new Category("General"); // 1
         Category c2 = new Category("Dudas");  // 2
         Category c3 = new Category("Evaluación"); // 3
@@ -62,12 +64,6 @@ public class Blog {
 
         // Usuarios
         System.out.println("Insertando Usuarios de Ejemplo");
-//        hc.getTransaction().begin();
-//        // Borro todos los usuarios antes
-//        hc.getManager().createNamedQuery("User.findAll", User.class).getResultList().forEach(u -> {
-//            hc.getManager().remove(u);
-//        });
-//        hc.getTransaction().commit();
 
         hc.getTransaction().begin();
         User u1 = new User("Pepe Perez","pepe@pepe.es","1234"); // 5
@@ -86,12 +82,6 @@ public class Blog {
 
         // Post
         System.out.println("Insertando Post de Ejemplo");
-//        hc.getTransaction().begin();
-//        // Borro todos los post antes
-//        hc.getManager().createNamedQuery("Post.findAll", Post.class).getResultList().forEach(p -> {
-//            hc.getManager().remove(p);
-//        });
-//        hc.getTransaction().commit();
 
         hc.getTransaction().begin();
         Post p1 = new Post("Post num 1", "http://post1.com", "Este es el post num 1", u1, c1); //10
@@ -110,12 +100,6 @@ public class Blog {
 
         // Comentarios
         System.out.println("Insertando Comentarios de Ejemplo");
-//        hc.getTransaction().begin();
-//        // Borro todos los post antes
-//        hc.getManager().createNamedQuery("Comment.findAll", Comment.class).getResultList().forEach(c -> {
-//            hc.getManager().remove(c);
-//        });
-//        hc.getTransaction().commit();
 
         hc.getTransaction().begin();
         Comment cm1 = new Comment("Comentario 01,", u1, p1);//15
@@ -140,6 +124,21 @@ public class Blog {
 
         hc.close();
 
+    }
+
+    private void removeData() {
+        // Usando Hibernate
+//        transactionManager.begin();
+//        // Collection == name of the class being saved ⮧
+//        entityManager.createNativeQuery("db.GameCharacter.drop()").executeUpdate();
+//        transactionManager.commit();
+        // Lo sutyo sería un controlador
+        ConnectionString connectionString = new ConnectionString("mongodb://mongoadmin:mongopass@localhost/test?authSource=admin");
+        MongoClient mongoClient = MongoClients.create(connectionString);
+
+       // Obtenemos la base de datos que necesitamos
+        MongoDatabase blogDB = mongoClient.getDatabase("blog");
+        blogDB.drop(); // Si queremos borrar toda la base de datos
     }
 
     public void Categories() {
